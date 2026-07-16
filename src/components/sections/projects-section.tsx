@@ -9,8 +9,9 @@ export function ProjectsSection() {
       className="section projects"
       id="work"
       aria-labelledby="work-title"
+      data-depth-section
     >
-      <div className="page-shell">
+      <div className="page-shell" data-depth-plane>
         <Reveal>
           <SectionHeading
             index="03"

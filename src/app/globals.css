@@ -380,6 +380,63 @@ ol {
   transform: translateY(0);
 }
 
+/* Section depth transitions */
+
+[data-depth-section] {
+  --depth-opacity: 1;
+  --depth-scale: 1;
+  --depth-z: 0px;
+  --depth-y: 0px;
+  --depth-rotate-x: 0deg;
+  --depth-blur: 0px;
+}
+
+[data-depth-plane] {
+  transform-origin: 50% 50svh;
+  backface-visibility: hidden;
+}
+
+[data-depth-section][data-depth-phase="entering"] [data-depth-plane],
+[data-depth-section][data-depth-phase="exiting"] [data-depth-plane] {
+  transform: perspective(72rem) translate3d(0, var(--depth-y), var(--depth-z))
+    rotateX(var(--depth-rotate-x)) scale(var(--depth-scale));
+  opacity: var(--depth-opacity);
+  filter: blur(var(--depth-blur));
+  will-change: transform, opacity, filter;
+}
+
+[data-depth-section][data-depth-phase="settled"] [data-depth-plane],
+[data-depth-section][data-depth-phase="dormant"] [data-depth-plane] {
+  transform: none;
+  opacity: 1;
+  filter: none;
+  will-change: auto;
+}
+
+.depth-portal {
+  --depth-portal-strength: 0;
+  position: fixed;
+  z-index: 24;
+  inset: 0;
+  transform: scale(calc(1.08 - var(--depth-portal-strength) * 0.08));
+  background:
+    repeating-radial-gradient(
+      ellipse at center,
+      transparent 0 8%,
+      color-mix(in srgb, var(--signal) 7%, transparent) 8.3% 8.65%,
+      transparent 9% 15%
+    ),
+    radial-gradient(
+      ellipse at center,
+      transparent 34%,
+      color-mix(in srgb, var(--ink) 76%, transparent) 100%
+    );
+  opacity: calc(var(--depth-portal-strength) * 0.62);
+  mask-image: radial-gradient(ellipse at center, black, transparent 78%);
+  pointer-events: none;
+  transition: opacity 80ms linear;
+}
+
 /* Header */
 
 .site-header {

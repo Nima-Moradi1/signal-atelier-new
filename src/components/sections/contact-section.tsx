@@ -8,9 +8,10 @@ export function ContactSection() {
       className="section contact"
       id="contact"
       aria-labelledby="contact-title"
+      data-depth-section
     >
       <div className="contact__glow" aria-hidden="true" />
-      <div className="page-shell">
+      <div className="page-shell" data-depth-plane>
         <Reveal>
           <div className="contact__heading">
             <p>
