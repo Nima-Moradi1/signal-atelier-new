@@ -7,6 +7,7 @@ export function ExperienceSection() {
       className="experience"
       id="experience"
       aria-labelledby="experience-title"
+      data-depth-section
     >
       <ExperienceBook experiences={portfolio.experience} />
     </section>

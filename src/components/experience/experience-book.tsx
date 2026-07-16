@@ -131,6 +131,7 @@ export function ExperienceBook({ experiences }: ExperienceBookProps) {
         role="region"
         aria-label="Scroll-controlled experience book"
         tabIndex={0}
+        data-depth-plane
       >
         <header className="experience-book__heading page-shell">
           <p>

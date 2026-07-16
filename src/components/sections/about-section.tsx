@@ -5,8 +5,13 @@ import { SectionHeading } from "@/components/ui/section-heading";
 
 export function AboutSection() {
   return (
-    <section className="section about" id="about" aria-labelledby="about-title">
-      <div className="page-shell">
+    <section
+      className="section about"
+      id="about"
+      aria-labelledby="about-title"
+      data-depth-section
+    >
+      <div className="page-shell" data-depth-plane>
         <Reveal>
           <SectionHeading
             index="01"
