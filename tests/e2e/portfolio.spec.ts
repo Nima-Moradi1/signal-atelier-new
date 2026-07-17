@@ -28,25 +28,64 @@ test("does not emit deprecated Three.js warnings", async ({ page }) => {
   expect(deprecatedWarnings).toEqual([]);
 });
 
+test("prepares the first landing frame once and reuses the cached result", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    if (!window.sessionStorage.getItem("portfolio-test-cleared")) {
+      window.localStorage.removeItem("nima-portfolio-ready-v5");
+      window.sessionStorage.setItem("portfolio-test-cleared", "true");
+    }
+  });
+  await page.goto("/");
+
+  const preloader = page.locator(".landing-preloader");
+  await expect(preloader).toBeVisible();
+  await expect(preloader).toContainText("Building the first frame.");
+  await expect(page.locator(".landing-content")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+  await expect(preloader).toHaveCount(0, { timeout: 10_000 });
+  await expect(
+    page.getByRole("heading", {
+      name: /I build for scalability, performance, and creativity/i,
+    }),
+  ).toBeVisible();
+
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-portfolio-cached",
+    "true",
+  );
+  await expect(page.locator(".landing-preloader")).not.toBeVisible();
+});
+
 test("renders the portfolio narrative and navigation", async ({ page }) => {
   await page.goto("/");
 
   await expect(
-    page.getByRole("heading", { name: /I build digital systems with signal/i }),
+    page.getByRole("heading", {
+      name: /I build for scalability, performance, and creativity/i,
+    }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Explore selected work" }).click();
   await expect(page.locator("#work")).toBeInViewport();
+  await expect(page.getByRole("heading", { name: "XO Arena" })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Emerald Case" }),
-  ).toBeVisible();
+    page.getByRole("link", { name: "View the XO Arena case study" }),
+  ).toHaveAttribute("href", "/projects/xo-arena");
 });
 
-test("renders a controllable workstation with reliable resume and lamp actions", async ({
+test("renders a controllable workstation with in-scene resume and lamp actions", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.waitForLoadState("networkidle");
+  await expect(page.locator(".landing-preloader")).toHaveCount(0, {
+    timeout: 12_000,
+  });
 
   await expect(page.locator(".hero__scene")).toHaveCount(0);
   const studio = page.getByRole("region", {
@@ -60,9 +99,16 @@ test("renders a controllable workstation with reliable resume and lamp actions",
   const viewport = page.locator(".hero-studio__viewport");
   const canvas = viewport.locator("canvas");
   const hasWorkstationCanvas = (await canvas.count()) > 0;
-  let expectedThemeAfterToolbar = "light";
   if (hasWorkstationCanvas) {
     await expect(canvas).toHaveCSS("touch-action", "pan-y");
+    await expect(page.getByText("Raise résumé", { exact: true })).toHaveCount(
+      0,
+    );
+    await expect(page.getByText("Pull desk lamp", { exact: true })).toHaveCount(
+      0,
+    );
+    await expect(page.locator(".hero-studio__resume-hotspot")).toHaveCount(0);
+    await expect(page.locator("[data-lamp-hand-hint]")).toBeVisible();
     const beforeDrag = await viewport.screenshot();
     const bounds = await viewport.boundingBox();
     expect(bounds).not.toBeNull();
@@ -83,6 +129,35 @@ test("renders a controllable workstation with reliable resume and lamp actions",
       expect(beforeDrag.equals(afterDrag)).toBe(false);
     }
 
+    const resumeHint = viewport.locator(".resume-touch-hint");
+    const resumeHintBounds = await resumeHint.boundingBox();
+    expect(resumeHintBounds).not.toBeNull();
+    if (resumeHintBounds) {
+      await page.mouse.click(
+        resumeHintBounds.x + resumeHintBounds.width / 2,
+        resumeHintBounds.y + resumeHintBounds.height / 2,
+      );
+    }
+
+    const dialog = page.getByRole("dialog", {
+      name: "Nima Moradirad — Résumé",
+    });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("img")).toHaveCount(1);
+    await expect(dialog.getByRole("img")).toHaveAttribute(
+      "src",
+      /nima-moradirad-resume-preview\.webp/,
+    );
+    await expect(dialog.getByText(/one-page overview/i)).toBeVisible();
+    await expect(page.locator("body")).toHaveCSS("overflow", "hidden");
+    await expect(
+      dialog.getByRole("link", { name: /Open full size/i }),
+    ).toHaveAttribute("href", "/nima-moradirad-resume.pdf");
+
+    await page.keyboard.press("Escape");
+    await expect(dialog).not.toBeVisible();
+    await expect(page.locator("body")).not.toHaveCSS("overflow", "hidden");
+
     const pullTarget = viewport.locator(".desk-lamp__pull-target");
     await expect(pullTarget).toHaveCount(1);
     await expect(pullTarget).toHaveCSS("touch-action", "none");
@@ -99,43 +174,11 @@ test("renders a controllable workstation with reliable resume and lamp actions",
         pullBounds.y + pullBounds.height / 2 + 36,
         { steps: 6 },
       );
+      await expect(page.locator("[data-lamp-hand-hint]")).toHaveCount(0);
       await page.mouse.up();
-      await expect(page.locator("html")).toHaveAttribute(
-        "data-theme",
-        "light",
-      );
-      expectedThemeAfterToolbar = "dark";
+      await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     }
   }
-
-  await page.getByRole("button", { name: "Raise résumé" }).click();
-  const dialog = page.getByRole("dialog", {
-    name: "Nima Moradirad — Résumé",
-  });
-  await expect(dialog).toBeVisible();
-  await expect(
-    dialog.getByRole("img", {
-      name: "Preview of Nima Moradirad's one-page résumé",
-    }),
-  ).toBeVisible();
-  await expect(page.locator("body")).toHaveCSS("overflow", "hidden");
-  await expect(
-    dialog.getByRole("link", { name: /Open full size/i }),
-  ).toHaveAttribute("href", "/nima-moradirad-resume.pdf");
-
-  await page.keyboard.press("Escape");
-  await expect(dialog).not.toBeVisible();
-  await expect(page.locator("body")).not.toHaveCSS("overflow", "hidden");
-
-  await page
-    .getByRole("button", {
-      name: /Switch the desk lamp/i,
-    })
-    .click();
-  await expect(page.locator("html")).toHaveAttribute(
-    "data-theme",
-    expectedThemeAfterToolbar,
-  );
 });
 
 test("uses six depth portals while keeping section anchors and reduced motion safe", async ({
@@ -210,6 +253,9 @@ test("pull-chain control changes and remembers the room theme", async ({
   });
 
   await page.goto("/");
+  await expect(page.locator(".landing-preloader")).toHaveCount(0, {
+    timeout: 12_000,
+  });
 
   const lampByName = page.getByRole("button", {
     name: /Turn the reading lamp off and switch to light mode/i,
@@ -270,7 +316,11 @@ test("pull-chain control changes and remembers the room theme", async ({
 
 test("typesets experience copy across both physical book pages", async ({
   page,
-}) => {
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name === "mobile-chrome",
+    "The mobile project uses the dedicated native experience reader.",
+  );
   async function scrollExperienceIntoPlace() {
     await page.goto("/#experience");
     await page.addStyleTag({
@@ -319,80 +369,44 @@ test("typesets experience copy across both physical book pages", async ({
   );
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await scrollExperienceIntoPlace();
+  await page.goto("/#experience");
+  const mobileReader = page.locator(".mobile-experience-reader");
+  await expect(mobileReader).toBeVisible();
+  await expect(page.locator(".experience-book canvas")).toHaveCount(0);
+  await expect(
+    mobileReader.getByRole("heading", { name: "Senior Frontend Developer" }),
+  ).toBeVisible();
+  await expect(
+    mobileReader.getByText(/controlled auto-updates, cache versioning/i),
+  ).toBeVisible();
 
-  const mobileHeading = await page
-    .locator(".experience-book__heading h2")
-    .boundingBox();
-  const mobileScene = await page
-    .locator(".experience-book__scene")
-    .boundingBox();
-  const mobileCopy = await page
-    .locator(".experience-book__page-copy")
-    .boundingBox();
-  const mobilePages = page.locator(".experience-book__page");
-
-  expect(mobileHeading).not.toBeNull();
-  expect(mobileScene).not.toBeNull();
-  expect(mobileCopy).not.toBeNull();
-  await expect(mobilePages).toHaveCount(2);
-  if (!mobileHeading || !mobileScene || !mobileCopy) return;
-
-  expect(mobileScene.y).toBeGreaterThanOrEqual(
-    mobileHeading.y + mobileHeading.height + 12,
+  const mobileBook = mobileReader.locator(
+    ".mobile-experience-reader__book article",
   );
-  expect(mobileScene.x).toBeGreaterThanOrEqual(10);
-  expect(mobileScene.x + mobileScene.width).toBeLessThanOrEqual(380);
-  expect(mobileCopy.x).toBeGreaterThanOrEqual(20);
-  expect(mobileCopy.x + mobileCopy.width).toBeLessThanOrEqual(370);
-  expect(mobileCopy.y).toBeGreaterThanOrEqual(mobileScene.y - 2);
-  expect(mobileCopy.y + mobileCopy.height).toBeLessThanOrEqual(
-    mobileScene.y + mobileScene.height + 2,
-  );
-
-  const pageOverflow = await mobilePages.evaluateAll((pages) =>
-    pages.map((bookPage) => ({
-      horizontal: bookPage.scrollWidth - bookPage.clientWidth,
-      vertical: bookPage.scrollHeight - bookPage.clientHeight,
-    })),
-  );
-  expect(pageOverflow).toEqual([
-    { horizontal: 0, vertical: 0 },
-    { horizontal: 0, vertical: 0 },
-  ]);
-
-  await expect(page.locator(".experience-book__page-copy")).toHaveCSS(
-    "background-color",
-    "rgba(0, 0, 0, 0)",
-  );
-  const mobileCopySizes = await page.evaluate(() => ({
-    summary: Number.parseFloat(
-      getComputedStyle(document.querySelector(".experience-book__summary")!)
-        .fontSize,
-    ),
-    highlight: Number.parseFloat(
-      getComputedStyle(
-        document.querySelector(".experience-book__page--right li")!,
-      ).fontSize,
-    ),
-  }));
-  expect(mobileCopySizes.summary).toBeGreaterThanOrEqual(9.5);
-  expect(mobileCopySizes.highlight).toBeGreaterThanOrEqual(8.75);
+  const mobileBookBounds = await mobileBook.boundingBox();
+  expect(mobileBookBounds).not.toBeNull();
+  if (!mobileBookBounds) return;
+  expect(mobileBookBounds.x).toBeGreaterThanOrEqual(10);
+  expect(mobileBookBounds.x + mobileBookBounds.width).toBeLessThanOrEqual(380);
 
   for (const role of [
     "Senior Frontend Engineer",
     "Frontend Developer",
     "React Developer",
   ]) {
-    await page.getByRole("button", { name: "Next experience" }).click();
-    await expect(page.locator(".experience-book__page-copy h3")).toHaveText(
-      role,
-    );
-    const chapterOverflow = await mobilePages.evaluateAll((pages) =>
-      pages.map((bookPage) => bookPage.scrollHeight - bookPage.clientHeight),
-    );
-    expect(chapterOverflow).toEqual([0, 0]);
+    await mobileReader.getByRole("button", { name: "Next experience" }).click();
+    await expect(mobileReader.locator("h3")).toHaveText(role);
   }
+
+  await expect(
+    mobileReader.getByRole("button", { name: "Next experience" }),
+  ).toBeDisabled();
+  const horizontalOverflow = await page.evaluate(
+    () =>
+      document.documentElement.scrollWidth -
+      document.documentElement.clientWidth,
+  );
+  expect(horizontalOverflow).toBe(0);
 });
 
 test("keeps the mobile glass navbar readable with adjacent lamp access", async ({
@@ -503,6 +517,9 @@ test("gives light mode a dimensional page and project visual system", async ({
   page,
 }) => {
   await page.goto("/");
+  await expect(page.locator(".landing-preloader")).toHaveCount(0, {
+    timeout: 12_000,
+  });
   const lamp = page.locator(".theme-lamp__pull");
   const box = await lamp.boundingBox();
   expect(box).not.toBeNull();
@@ -548,7 +565,7 @@ test("gives light mode a dimensional page and project visual system", async ({
   ).toContain("linear-gradient");
 });
 
-test("compacts capabilities and presents the completed education signal", async ({
+test("compacts capabilities and presents in-progress education", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -587,13 +604,18 @@ test("compacts capabilities and presents the completed education signal", async 
     "education-signal-pulse",
   );
   await expect(
-    page.getByText("Tehran Azad University · Sep 2021 — Jul 15, 2026"),
+    page.getByText("Tehran Azad University · 2021 — Present"),
   ).toBeAttached();
 });
 
 test("moves capabilities across a finite horizontal timeline", async ({
   page,
-}) => {
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name === "mobile-chrome",
+    "Coarse pointers intentionally use the native horizontal timeline.",
+  );
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   await page.addStyleTag({
     content: "html { scroll-behavior: auto !important; }",
@@ -602,15 +624,12 @@ test("moves capabilities across a finite horizontal timeline", async ({
   const timeline = page.locator(".capability-timeline");
   const track = page.locator(".capability-timeline__track");
   await expect(timeline).toHaveAttribute("data-motion", "depth-linked");
-  await expect(page.locator(".capability-timeline__item")).toHaveCount(4);
+  await expect(page.locator(".capability-timeline__item")).toHaveCount(5);
 
   await expect
     .poll(() =>
       timeline.evaluate((element) =>
-        Math.max(
-          (element as HTMLElement).offsetHeight - window.innerHeight,
-          0,
-        ),
+        Math.max((element as HTMLElement).offsetHeight - window.innerHeight, 0),
       ),
     )
     .toBeGreaterThan(300);
@@ -648,9 +667,9 @@ test("moves capabilities across a finite horizontal timeline", async ({
   expect(horizontalOffset).toBeLessThan(-100);
 
   await forceScroll(timelineTop + travel);
-  await expect(timeline).toHaveAttribute("data-active-index", "3");
+  await expect(timeline).toHaveAttribute("data-active-index", "4");
   await expect(
-    page.getByText("Tehran Azad University · Sep 2021 — Jul 15, 2026"),
+    page.getByText("Tehran Azad University · 2021 — Present"),
   ).toBeVisible();
 
   const documentOverflow = await page.evaluate(
@@ -679,15 +698,86 @@ test("keeps the horizontal timeline usable in short viewports", async ({
   await viewport.evaluate((element) => {
     element.scrollTo({ left: element.scrollWidth, behavior: "auto" });
   });
-  await expect(timeline).toHaveAttribute("data-active-index", "3");
+  await expect(timeline).toHaveAttribute("data-active-index", "4");
   await expect(
-    page.getByText("Tehran Azad University · Sep 2021 — Jul 15, 2026"),
+    page.getByText("Tehran Azad University · 2021 — Present"),
   ).toBeAttached();
+});
+
+test("drags the mobile capability timeline from every section surface", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#capabilities");
+  await expect(page.locator(".landing-preloader")).toHaveCount(0, {
+    timeout: 12_000,
+  });
+  await page.addStyleTag({
+    content: "html { scroll-behavior: auto !important; }",
+  });
+
+  const timeline = page.locator(".capability-timeline");
+  const stage = page.locator(".capability-timeline__stage");
+  const viewport = page.locator(".capability-timeline__viewport");
+  await timeline.evaluate((element) => {
+    window.scrollTo(
+      0,
+      element.getBoundingClientRect().top + window.scrollY - 80,
+    );
+  });
+  await page.waitForTimeout(200);
+  await expect(timeline).toHaveAttribute("data-motion", "native");
+  await expect(stage).toBeVisible();
+  await expect(stage).toHaveAttribute("data-horizontal-drag-ready", "true");
+  await expect(stage).toHaveCSS("touch-action", "pan-y");
+  await expect(
+    page.getByText("Skills & experience", { exact: true }),
+  ).toBeVisible();
+
+  async function dragFrom(
+    selector: string,
+    horizontalPosition = 0.5,
+    verticalPosition = 0.5,
+  ) {
+    await viewport.evaluate((element) => element.scrollTo({ left: 0 }));
+    await expect
+      .poll(() => viewport.evaluate((element) => element.scrollLeft))
+      .toBe(0);
+
+    const target = page.locator(selector).first();
+    const bounds = await target.boundingBox();
+    expect(bounds).not.toBeNull();
+    if (!bounds) return;
+
+    const startX = bounds.x + bounds.width * horizontalPosition;
+    const startY = bounds.y + bounds.height * verticalPosition;
+    await page.mouse.move(startX, startY);
+    await page.mouse.down();
+    await page.mouse.move(startX - 120, startY + 2, { steps: 8 });
+    await expect(stage).toHaveAttribute(
+      "data-horizontal-drag-state",
+      "dragging",
+    );
+    await expect
+      .poll(() => viewport.evaluate((element) => element.scrollLeft))
+      .toBeGreaterThan(60);
+    await page.mouse.up();
+  }
+
+  await dragFrom(".capability-timeline__stage", 0.72, 0.17);
+  await dragFrom(".capability-timeline__card", 0.72);
+  await dragFrom(".capability-timeline__card > ul li", 0.72);
+  await dragFrom(".capability-timeline__steps", 0.92);
 });
 
 test("experience reader exposes scroll and button-driven page navigation", async ({
   page,
-}) => {
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name === "mobile-chrome",
+    "The mobile reader is covered by its dedicated touch-navigation tests.",
+  );
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/#experience");
 
   await expect(
@@ -697,6 +787,162 @@ test("experience reader exposes scroll and button-driven page navigation", async
   await expect(page.locator(".experience-book__page-copy h3")).toHaveText(
     "Senior Frontend Engineer",
   );
+});
+
+test("renders the updated mobile, PWA, and AI engineering depth", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+
+  await expect(
+    page.getByText("6+ years across web, mobile, and PWA engineering").first(),
+  ).toBeVisible();
+  await page.goto("/#experience");
+  await expect(
+    page.getByText(/Android applications with Capacitor/i).first(),
+  ).toBeAttached();
+  await expect(page.getByText(/Codex and Claude Max/i).first()).toBeAttached();
+
+  await page.goto("/#capabilities");
+  await expect(
+    page.getByText("Mobile & PWA delivery", { exact: true }),
+  ).toBeAttached();
+  await expect(
+    page.getByText("AI, systems & data", { exact: true }),
+  ).toBeAttached();
+});
+
+test("opens the one-page resume from the in-scene mobile desk hint", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  const viewport = page.locator(".hero-studio__viewport");
+  if ((await viewport.locator("canvas").count()) === 0) {
+    test.skip(true, "WebGL is unavailable in this browser runtime.");
+  }
+
+  await expect(page.locator(".hero-studio__resume-hotspot")).toHaveCount(0);
+  const hint = viewport.locator(".resume-touch-hint");
+  await expect(hint).toBeVisible();
+  const bounds = await hint.boundingBox();
+  expect(bounds).not.toBeNull();
+  if (!bounds) return;
+
+  await page.mouse.click(
+    bounds.x + bounds.width / 2,
+    bounds.y + bounds.height / 2,
+  );
+  const dialog = page.getByRole("dialog", { name: "Nima Moradirad — Résumé" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("img")).toHaveCount(1);
+  await expect(dialog.getByText(/one-page overview/i)).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).not.toBeVisible();
+});
+
+test("presents XO Arena as a complete real-time product case study", async ({
+  page,
+}) => {
+  await page.goto("/projects/xo-arena");
+
+  await expect(
+    page.getByRole("heading", {
+      name: "Real-time play, engineered end to end.",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText(/Complete local product/i)).toBeVisible();
+  await expect(
+    page.locator("link[rel='preload'][as='fetch']").first(),
+  ).toHaveAttribute("href", "/assets/projects/xo-arena/xo-arena-preview.webm");
+
+  const video = page.locator(".xo-video video");
+  await expect(video).toHaveAttribute("preload", "auto");
+  await expect(video).toHaveAttribute("playsinline", "");
+  await expect(video).toHaveAttribute(
+    "poster",
+    "/assets/projects/xo-arena/video-poster.webp",
+  );
+  await expect(video.locator("source")).toHaveCount(2);
+  await expect(page.locator(".xo-system__grid article")).toHaveCount(6);
+  await expect(page.getByText("Socket.IO", { exact: true })).toBeVisible();
+});
+
+test("lazy-loads XO product captures with designed loading masks", async ({
+  page,
+}) => {
+  await page.goto("/projects/xo-arena");
+
+  const cards = page.locator(".xo-gallery-card");
+  await expect(cards).toHaveCount(4);
+  expect(
+    await cards
+      .locator("img")
+      .evaluateAll((images) =>
+        images.every((image) => (image as HTMLImageElement).loading === "lazy"),
+      ),
+  ).toBe(true);
+  await expect(cards.locator(".xo-gallery-card__skeleton")).toHaveCount(4);
+  await expect(
+    page.getByRole("heading", { name: "Product entry" }),
+  ).toBeAttached();
+  await expect(
+    page.getByRole("heading", { name: "Persistent player history" }),
+  ).toBeAttached();
+  await expect(
+    page.getByRole("heading", {
+      name: "Why this is a case study—not a temporary demo.",
+    }),
+  ).toBeAttached();
+  await expect(page.getByText(/partially provisioned build/i)).toBeAttached();
+});
+
+test("serves optimized XO media within explicit transfer budgets", async ({
+  request,
+}) => {
+  const assets = [
+    ["/assets/projects/xo-arena/xo-arena-preview.mp4", 500_000],
+    ["/assets/projects/xo-arena/xo-arena-preview.webm", 500_000],
+    ["/assets/projects/xo-arena/landing.webp", 100_000],
+    ["/assets/projects/xo-arena/lobby.webp", 100_000],
+    ["/assets/projects/xo-arena/game-room.webp", 100_000],
+    ["/assets/projects/xo-arena/profile.webp", 100_000],
+  ] as const;
+
+  for (const [path, budget] of assets) {
+    const response = await request.get(path);
+    expect(response.ok()).toBe(true);
+    expect((await response.body()).byteLength).toBeLessThan(budget);
+    expect(response.headers()["cache-control"]).toContain("max-age");
+  }
+});
+
+test("keeps the XO case study contained and navigable on mobile", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/projects/xo-arena");
+
+  await expect(page.locator(".xo-gallery__grid")).toHaveCSS(
+    "grid-template-columns",
+    "350px",
+  );
+  const overflow = await page.evaluate(
+    () =>
+      document.documentElement.scrollWidth -
+      document.documentElement.clientWidth,
+  );
+  expect(overflow).toBe(0);
+
+  await page.getByRole("button", { name: "Open navigation" }).click();
+  await page
+    .locator(".mobile-nav")
+    .getByRole("link", { name: /Work$/ })
+    .click();
+  await expect(page).toHaveURL(/\/#work$/);
+  await expect(page.getByRole("heading", { name: "XO Arena" })).toBeVisible();
 });
 
 test("exposes accessible form validation", async ({ page }) => {
@@ -713,6 +959,24 @@ test("has no automatically detectable serious accessibility violations", async (
   page,
 }) => {
   await page.goto("/");
+  await expect(page.locator(".landing-preloader")).toHaveCount(0, {
+    timeout: 10_000,
+  });
+  const results = await new AxeBuilder({ page })
+    .disableRules(["color-contrast"])
+    .analyze();
+
+  expect(
+    results.violations.filter((violation) =>
+      ["critical", "serious"].includes(violation.impact ?? ""),
+    ),
+  ).toEqual([]);
+});
+
+test("has no serious accessibility violations on the XO case study", async ({
+  page,
+}) => {
+  await page.goto("/projects/xo-arena");
   const results = await new AxeBuilder({ page })
     .disableRules(["color-contrast"])
     .analyze();
