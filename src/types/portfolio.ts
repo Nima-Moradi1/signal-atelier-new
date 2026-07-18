@@ -18,6 +18,8 @@ export type ProjectItem = {
   category: string;
   summary: string;
   contribution: string;
+  image: string;
+  imageAlt: string;
   technologies: string[];
   href?: string;
   featured: boolean;

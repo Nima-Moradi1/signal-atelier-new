@@ -14,9 +14,10 @@ export function AboutSection() {
       <div className="page-shell" data-depth-plane>
         <Reveal>
           <SectionHeading
+            id="about-title"
             index="01"
             eyebrow={portfolio.about.eyebrow}
-            title="Scalable systems can still feel distinctly human."
+            title="Human products. Scalable systems."
           />
         </Reveal>
 
@@ -47,25 +48,22 @@ export function AboutSection() {
             </Reveal>
           </div>
 
-          <div className="about__narrative">
-            {portfolio.about.paragraphs.map((paragraph, index) => (
-              <Reveal key={paragraph} delay={index * 0.08}>
-                <p>{paragraph}</p>
+          <div className="about__details">
+            <Reveal className="about__narrative">
+              {portfolio.about.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </Reveal>
+            {portfolio.about.principles.map((principle, index) => (
+              <Reveal key={principle.index} delay={(index + 1) * 0.06}>
+                <article className="principle-card">
+                  <span>{principle.index}</span>
+                  <h3>{principle.title}</h3>
+                  <p>{principle.text}</p>
+                </article>
               </Reveal>
             ))}
           </div>
-        </div>
-
-        <div className="principle-grid">
-          {portfolio.about.principles.map((principle, index) => (
-            <Reveal key={principle.index} delay={index * 0.08}>
-              <article className="principle-card">
-                <span>{principle.index}</span>
-                <h3>{principle.title}</h3>
-                <p>{principle.text}</p>
-              </article>
-            </Reveal>
-          ))}
         </div>
       </div>
     </section>

@@ -14,10 +14,11 @@ export function CapabilitiesSection() {
       <div className="page-shell capabilities__intro" data-depth-plane>
         <Reveal>
           <SectionHeading
+            id="capabilities-title"
             index="04"
             eyebrow="Engineering capabilities"
-            title="From web architecture to Android delivery."
-            description="The product architecture, mobile and PWA delivery, quality practices, and AI-assisted systems I use across production work."
+            title="Web to Android."
+            description="Architecture, delivery, quality, and AI-assisted systems for production products."
           />
         </Reveal>
       </div>

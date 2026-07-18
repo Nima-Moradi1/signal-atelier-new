@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { portfolio } from "@/content/portfolio";
@@ -13,12 +14,13 @@ export function ProjectsSection() {
       data-depth-section
     >
       <div className="page-shell" data-depth-plane>
-        <Reveal>
+        <Reveal className="projects__header-frame">
           <SectionHeading
+            id="work-title"
             index="03"
-            eyebrow="Selected transmissions"
-            title="Three products, built beyond the interface."
-            description="Selected work across real-time multiplayer, full-stack commerce, and a multi-surface B2B financial platform."
+            eyebrow="Selected work"
+            title="Work that ships."
+            description="Three production-minded products across multiplayer, commerce, and B2B finance."
           />
         </Reveal>
 
@@ -30,11 +32,14 @@ export function ProjectsSection() {
                 data-accent={project.accent}
                 data-featured={index === 0}
               >
-                <div className="project-card__visual" aria-hidden="true">
-                  <div className="project-card__orb" />
-                  <div className="project-card__orbit project-card__orbit--one" />
-                  <div className="project-card__orbit project-card__orbit--two" />
-                  <span>{project.number}</span>
+                <div className="project-card__visual">
+                  <Image
+                    src={project.image}
+                    alt={project.imageAlt}
+                    fill
+                    sizes="(max-width: 864px) 100vw, 33vw"
+                  />
+                  <span aria-hidden="true">{project.number}</span>
                 </div>
                 <div className="project-card__content">
                   <div className="project-card__kicker">
@@ -47,12 +52,8 @@ export function ProjectsSection() {
                   </div>
                   <h3>{project.title}</h3>
                   <p>{project.summary}</p>
-                  <p className="project-card__contribution">
-                    <strong>Contribution</strong>
-                    {project.contribution}
-                  </p>
                   <div className="tag-list">
-                    {project.technologies.map((technology) => (
+                    {project.technologies.slice(0, 4).map((technology) => (
                       <span key={technology}>{technology}</span>
                     ))}
                   </div>

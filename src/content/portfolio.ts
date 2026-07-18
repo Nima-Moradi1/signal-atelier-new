@@ -20,9 +20,9 @@ export const portfolio = {
     email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "nimamoradirad@gmail.com",
     resumeUrl: "/nima-moradirad-resume.pdf",
     intro:
-      "I engineer secure, high-performance products across web, Android, and PWA surfaces—combining React architecture, real-time systems, resilient delivery, and thoughtful product design.",
+      "I build secure, high-performance products across web, Android, and PWA—from React architecture to real-time systems.",
     statement:
-      "My work connects scalable frontend architecture, mobile and PWA delivery, real-time systems, and AI-accelerated engineering without giving up human oversight.",
+      "I build scalable web and mobile products where performance, reliability, and clear design work together.",
   },
   navigation: [
     { label: "About", href: "/#about" },
@@ -33,26 +33,25 @@ export const portfolio = {
   ] satisfies LinkItem[],
   signals: ["Scalability", "Performance", "Creativity", "Product engineering"],
   about: {
-    eyebrow: "Product engineering across web and mobile",
+    eyebrow: "Web + mobile product engineering",
     paragraphs: [
-      "I work across React, Next.js, Vite, and TypeScript, choosing the right rendering strategy—SSR, CSR, SSG, ISR, or PPR—for each product. My recent work extends that foundation into Capacitor-based Android delivery, custom Java integrations, and resilient service-worker systems.",
-      "My experience spans B2B finance, government dashboards, e-commerce, and real-time multiplayer products. I mentor engineers around domain-driven boundaries and use Codex and Claude Max for architecture exploration, refactoring, review, testing, and documentation—accelerating delivery while keeping engineering judgment in the loop.",
+      "I turn React and TypeScript systems into reliable web, Android, and PWA products. Across finance, commerce, government, and real-time platforms, I use clear architecture and AI-assisted workflows to ship faster without giving up engineering judgment.",
     ],
     principles: [
       {
         index: "01",
-        title: "Scalability starts with boundaries",
-        text: "Clear domains, shared contracts, and modular components let products evolve across teams and surfaces.",
+        title: "Clear boundaries scale",
+        text: "Focused domains and shared contracts keep products adaptable.",
       },
       {
         index: "02",
-        title: "Performance is product behavior",
-        text: "Rendering, caching, release, and runtime decisions shape how reliable a product feels.",
+        title: "Performance earns trust",
+        text: "Fast rendering, caching, and releases make products feel reliable.",
       },
       {
         index: "03",
-        title: "Creativity needs engineering rigor",
-        text: "Expressive interfaces become useful products when validation, accessibility, and delivery stay dependable.",
+        title: "Rigor enables creativity",
+        text: "Accessible, validated delivery turns expressive UI into a useful product.",
       },
     ],
   },
@@ -145,9 +144,11 @@ export const portfolio = {
       title: "XO Arena",
       category: "Real-time multiplayer PWA · Product case study",
       summary:
-        "A modular, type-safe Tic-Tac-Toe platform with online matchmaking, live Socket.IO rooms, secure sessions, computer opponents, profiles, and installable mobile support.",
+        "A type-safe multiplayer PWA with live rooms, secure sessions, computer opponents, and mobile install support.",
       contribution:
         "Built shared contracts and a server-validated game engine with Next.js, TypeScript, Express, Socket.IO, Prisma, MySQL, Zod, avatar uploads, and httpOnly sessions.",
+      image: "/assets/projects/xo-arena/game-room.webp",
+      imageAlt: "XO Arena live game room with a completed Tic-Tac-Toe match",
       technologies: [
         "Next.js",
         "TypeScript",
@@ -165,9 +166,11 @@ export const portfolio = {
       title: "Emerald Case",
       category: "Full-stack e-commerce · Oct–Nov 2023",
       summary:
-        "A multilingual custom phone-case storefront with image upload, authentication, checkout, responsive theming, and transactional email.",
+        "A multilingual custom phone-case storefront with image uploads, authentication, checkout, and responsive theming.",
       contribution:
         "Built the product with Next.js and TypeScript, using Prisma and MongoDB for data, Stripe for payments, Resend for email, and Zustand plus Context for client state.",
+      image: "/assets/projects/emerald-case/homepage.jpg",
+      imageAlt: "Emerald Case storefront showing its custom phone-case builder",
       technologies: [
         "Next.js",
         "TypeScript",
@@ -185,9 +188,11 @@ export const portfolio = {
       title: "Hesabo Platform",
       category: "B2B financial platform · Production",
       summary:
-        "Four connected product surfaces for Admin, Employer, Employee, and Support users within a B2B financial platform.",
+        "Four connected Admin, Employer, Employee, and Support surfaces for a production B2B financial platform.",
       contribution:
         "Developed domain-driven interfaces and real-time features across Vite, TypeScript, MobX, React Context, HeroUI, Tailwind CSS, Android delivery, and a controlled PWA cache layer.",
+      image: "/assets/projects/hesabo/homepage.jpg",
+      imageAlt: "Hesabo website presenting its employee salary access platform",
       technologies: [
         "Vite",
         "TypeScript",

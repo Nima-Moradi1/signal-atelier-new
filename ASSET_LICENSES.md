@@ -2,7 +2,7 @@
 
 ## Original project assets
 
-The signal sculpture, project-card graphics, interface composition, gradients, icon, and Open Graph artwork are generated from source code and CSS in this repository. They do not embed third-party photographs, models, textures, video, or audio.
+The signal sculpture, interface composition, gradients, icon, and Open Graph artwork are generated from source code and CSS in this repository. They do not embed third-party models, textures, video, or audio.
 
 ## Fonts
 
@@ -21,5 +21,7 @@ Third-party source dependencies retain their respective licenses. The principal 
 - `public/assets/nima-moradirad.jpg` — portrait extracted from the résumé supplied by Nima Moradirad; used as personal portfolio content.
 - `public/nima-moradirad-resume.pdf` and its optimized WebP preview — the one-page professional résumé supplied by Nima Moradirad for public portfolio use.
 - `public/assets/projects/xo-arena/*` — WebP captures and optimized H.264/VP9 derivatives of the XO Arena screenshots and recording supplied by Nima Moradirad.
+- `public/assets/projects/emerald-case/homepage.jpg` — portfolio capture of Nima Moradirad's Emerald Case project from its public project URL.
+- `public/assets/projects/hesabo/homepage.jpg` — portfolio capture of the public Hesabo product site representing Nima Moradirad's production work.
 
 No third-party stock imagery is included. Personal résumé, portrait, and XO Arena media rights remain with Nima Moradirad.

@@ -19,8 +19,8 @@ export function ContactSection() {
               Open a channel
             </p>
             <h2 id="contact-title">
-              Have a meaningful problem?
-              <span>Let’s make it beautifully clear.</span>
+              Building something meaningful?
+              <span>Let’s make it clear.</span>
             </h2>
           </div>
         </Reveal>
@@ -28,10 +28,7 @@ export function ContactSection() {
         <div className="contact__layout">
           <Reveal>
             <div className="contact__aside">
-              <p>
-                The strongest collaborations start with context. Share the
-                product, the tension, and what a good outcome would feel like.
-              </p>
+              <p>Share the product, the challenge, and the outcome you need.</p>
               <div className="contact__availability">
                 <span className="status-dot" aria-hidden="true" />
                 <div>
