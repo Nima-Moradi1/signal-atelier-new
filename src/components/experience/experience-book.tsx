@@ -126,7 +126,7 @@ function DesktopExperienceBook({
     const progress = nextPage / Math.max(experiences.length - 1, 1);
     window.scrollTo({
       top: rootTop + travel * progress,
-      behavior: reducedMotion ? "auto" : "smooth",
+      behavior: "auto",
     });
   }
 
@@ -143,7 +143,7 @@ function DesktopExperienceBook({
 
   const activeExperience = experiences[activePage];
   const readerStyle = {
-    "--book-scroll-height": `${experiences.length * 115}svh`,
+    "--book-scroll-height": `${experiences.length * 32}svh`,
   } as CSSProperties;
 
   return (

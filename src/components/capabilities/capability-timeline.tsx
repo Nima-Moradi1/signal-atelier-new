@@ -3,7 +3,6 @@
 import {
   motion,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useTransform,
 } from "motion/react";
@@ -41,7 +40,6 @@ export function CapabilityTimeline({
   const track = useRef<HTMLOListElement>(null);
   const [travel, setTravel] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [shortViewport, setShortViewport] = useState(false);
   const horizontalDrag = useRef<{
     axis: "horizontal" | "vertical" | null;
     pointerId: number;
@@ -50,8 +48,7 @@ export function CapabilityTimeline({
     startY: number;
   } | null>(null);
   const suppressClick = useRef(false);
-  const reducedMotion = useReducedMotion() ?? false;
-  const nativeTimeline = reducedMotion || shortViewport;
+  const nativeTimeline = true;
   const itemCount = groups.length + 1;
   const { scrollYProgress } = useScroll({
     target: root,
@@ -74,16 +71,6 @@ export function CapabilityTimeline({
     observer.observe(trackNode);
     measure();
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const query = window.matchMedia(
-      "(max-height: 671px), (max-width: 54rem), (pointer: coarse)",
-    );
-    const update = () => setShortViewport(query.matches);
-    query.addEventListener("change", update);
-    update();
-    return () => query.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
