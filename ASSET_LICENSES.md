@@ -7,6 +7,7 @@ The signal sculpture, interface composition, gradients, icon, and Open Graph art
 ## Fonts
 
 - **Geist Sans** and **Geist Mono** are loaded through `next/font` and bundled into the production build. Geist is published by Vercel under the SIL Open Font License 1.1. See the [Geist repository](https://github.com/vercel/geist-font).
+- **Vazirmatn** is loaded through `next/font` for Persian UI and the repository includes `src/assets/fonts/Vazirmatn-Regular.ttf` for localized Open Graph rendering. Vazirmatn is published under the SIL Open Font License 1.1. See the [Vazirmatn repository](https://github.com/rastikerdar/vazirmatn).
 
 ## Icons
 

@@ -1,4 +1,8 @@
+import { useTranslations } from "next-intl";
+
 export default function XoArenaLoading() {
+  const t = useTranslations("Routes");
+
   return (
     <div className="xo-route-loading" role="status" aria-live="polite">
       <div aria-hidden="true">
@@ -12,7 +16,7 @@ export default function XoArenaLoading() {
         <span>X</span>
         <span>O</span>
       </div>
-      <p>Opening XO Arena case study…</p>
+      <p>{t("xoLoading")}</p>
     </div>
   );
 }

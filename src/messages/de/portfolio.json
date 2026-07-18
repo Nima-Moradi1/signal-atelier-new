@@ -1,0 +1,294 @@
+{
+  "identity": {
+    "name": "Nima Moradirad",
+    "initials": "NM",
+    "role": "Senior Frontend Engineer",
+    "shortRole": "Produktentwicklung · Web + Mobile",
+    "location": "Teheran, Iran",
+    "availability": "Mehr als 6 Jahre Erfahrung in Web-, Mobile- und PWA-Entwicklung",
+    "email": "nimamoradirad@gmail.com",
+    "resumeUrl": "/nima-moradirad-resume.pdf",
+    "resumePreview": "/assets/nima-moradirad-resume-preview.webp",
+    "intro": "Ich entwickle sichere, leistungsstarke Produkte für Web, Android und PWA – von React-Architekturen bis zu Echtzeitsystemen.",
+    "statement": "Ich entwickle skalierbare Web- und Mobile-Produkte, in denen Performance, Zuverlässigkeit und klares Design zusammenspielen."
+  },
+  "navigation": [
+    { "id": "about", "label": "Über mich", "href": "/#about" },
+    { "id": "experience", "label": "Erfahrung", "href": "/#experience" },
+    { "id": "work", "label": "Projekte", "href": "/#work" },
+    { "id": "capabilities", "label": "Kompetenzen", "href": "/#capabilities" },
+    { "id": "contact", "label": "Kontakt", "href": "/#contact" }
+  ],
+  "signals": [
+    "Skalierbarkeit",
+    "Performance",
+    "Kreativität",
+    "Produktentwicklung"
+  ],
+  "about": {
+    "eyebrow": "Produktentwicklung für Web + Mobile",
+    "paragraphs": [
+      "Ich verwandle React- und TypeScript-Systeme in verlässliche Produkte für Web, Android und PWA. In Finanzwesen, Handel, öffentlichem Sektor und auf Echtzeitplattformen kombiniere ich klare Architektur mit KI-gestützten Workflows, um schneller auszuliefern, ohne technische Urteilskraft einzubüßen."
+    ],
+    "principles": [
+      {
+        "id": "boundaries",
+        "index": "01",
+        "title": "Klare Grenzen schaffen Skalierbarkeit",
+        "text": "Klar abgegrenzte Domänen und gemeinsame Schnittstellen halten Produkte anpassungsfähig."
+      },
+      {
+        "id": "performance",
+        "index": "02",
+        "title": "Performance schafft Vertrauen",
+        "text": "Schnelles Rendering, verlässliches Caching und stabile Releases schaffen Vertrauen."
+      },
+      {
+        "id": "rigor",
+        "index": "03",
+        "title": "Sorgfalt ermöglicht Kreativität",
+        "text": "Barrierefreie, validierte Umsetzung macht aus ausdrucksstarken Oberflächen nützliche Produkte."
+      }
+    ]
+  },
+  "experience": [
+    {
+      "id": "hesabo",
+      "period": "Feb. 2025 — heute",
+      "role": "Senior Frontend Developer",
+      "company": "Hesabo · Teheran, Iran",
+      "summary": "Gestaltung der Frontend-Architektur und Auslieferung einer B2B-Finanzplattform mit Anwendungen für Administration, Arbeitgeber, Mitarbeitende und Support.",
+      "highlights": [
+        "Mentoring und Onboarding im Team mit Fokus auf Geschäftsabläufe, wartbaren Code und domänengetriebene Grenzen.",
+        "Entwicklung und Wartung von Android-Anwendungen mit Capacitor, Plattformintegrationen und eigenen Java-Plugins.",
+        "Verantwortung für eine angepasste PWA-Schicht mit kontrollierten automatischen Updates, Cache-Versionierung, Invalidierung und Offline-Fallbacks.",
+        "Verbesserung von Build-Performance, XSS-Schutz, Validierung, Autorisierung sowie Echtzeitfunktionen mit WebSocket und SignalR.",
+        "Einsatz von Codex und Claude Max für Architektur, Refactoring, Reviews, Tests, Dokumentation und wiederholbare Auslieferungsprozesse."
+      ],
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Capacitor",
+        "Android",
+        "PWA",
+        "WebSockets",
+        "AI-assisted delivery"
+      ]
+    },
+    {
+      "id": "basilica",
+      "period": "März 2024 — März 2025",
+      "role": "Senior Frontend Engineer",
+      "company": "Basilica Finance · Teheran, Iran",
+      "summary": "Technische Leitung der Frontend-Umsetzung einer skalierbaren Finanz-PWA für geschützte Nutzerabläufe und hohe Anfragevolumina.",
+      "highlights": [
+        "Umsetzung geschützter Authentifizierungs- und Produktabläufe mit Next.js, TypeScript, Zustand, Tailwind CSS und MUI.",
+        "Realisierung Lighthouse-orientierter Performance-Verbesserungen und Sicherung der Release-Qualität durch Reviews auf GitHub und GitLab."
+      ],
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Zustand",
+        "Tailwind CSS",
+        "Material UI",
+        "PWA"
+      ]
+    },
+    {
+      "id": "barname-negar",
+      "period": "Jan. 2023 — März 2024",
+      "role": "Frontend Developer",
+      "company": "BarnameNegar · Teheran, Iran",
+      "summary": "Entwicklung interner Dashboards und Verwaltungsoberflächen für den öffentlichen Sektor mit serverseitigem Rendering und REST-basierten Abläufen.",
+      "highlights": [
+        "Umsetzung von Vite- und TypeScript-Anwendungen mit SSR, REST APIs, Tailwind CSS, shadcn/ui und Redux-basiertem State Management."
+      ],
+      "technologies": [
+        "Vite",
+        "TypeScript",
+        "SSR",
+        "REST API",
+        "Tailwind CSS",
+        "shadcn/ui",
+        "Redux"
+      ]
+    },
+    {
+      "id": "kzi",
+      "period": "Dez. 2020 — Sept. 2022",
+      "role": "React Developer",
+      "company": "KZI",
+      "summary": "Umsetzung von E-Commerce- und Content-Erlebnissen mit React, JavaScript, Komponentenbibliotheken und modernem State Management.",
+      "highlights": [
+        "Sicherung der Lighthouse-Performance sowie eines verlässlichen PWA- und SPA-Verhaltens mit Material UI und Redux Toolkit.",
+        "Arbeit mit Vite, TypeScript, HeroUI, React Hook Form, Yup und routerbasierter Anwendungsarchitektur."
+      ],
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Material UI",
+        "Redux Toolkit",
+        "PWA",
+        "React Hook Form",
+        "Yup"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "xo-arena",
+      "number": "01",
+      "title": "XO Arena",
+      "category": "Echtzeit-Multiplayer-PWA · Produktfallstudie",
+      "summary": "Eine typsichere Multiplayer-PWA mit Live-Spielräumen, sicheren Sessions, Computergegnern und Unterstützung für die mobile Installation.",
+      "contribution": "Entwicklung gemeinsamer Verträge und einer servervalidierten Spiel-Engine mit Next.js, TypeScript, Express, Socket.IO, Prisma, MySQL, Zod, Avatar-Uploads und httpOnly-Sessions.",
+      "image": "/assets/projects/xo-arena/game-room.webp",
+      "imageAlt": "Live-Spielraum von XO Arena mit einer abgeschlossenen Tic-Tac-Toe-Partie",
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Socket.IO",
+        "Prisma",
+        "MySQL",
+        "PWA"
+      ],
+      "href": "/projects/xo-arena",
+      "featured": true,
+      "accent": "lime"
+    },
+    {
+      "id": "emerald-case",
+      "number": "02",
+      "title": "Emerald Case",
+      "category": "Full-Stack-E-Commerce · Okt.–Nov. 2023",
+      "summary": "Ein mehrsprachiger Shop für individuelle Smartphone-Hüllen mit Bild-Uploads, Authentifizierung, Checkout und responsiver Theme-Unterstützung.",
+      "contribution": "Entwicklung des Produkts mit Next.js und TypeScript; Prisma und MongoDB für Daten, Stripe für Zahlungen, Resend für E-Mails sowie Zustand und Context für den Client-State.",
+      "image": "/assets/projects/emerald-case/homepage.jpg",
+      "imageAlt": "Emerald-Case-Shop mit Konfigurator für individuelle Smartphone-Hüllen",
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Prisma",
+        "MongoDB",
+        "Stripe",
+        "i18n"
+      ],
+      "href": "https://emerald-case.vercel.app/en/",
+      "featured": true,
+      "accent": "violet"
+    },
+    {
+      "id": "hesabo-platform",
+      "number": "03",
+      "title": "Hesabo Platform",
+      "category": "B2B-Finanzplattform · Produktivbetrieb",
+      "summary": "Vier verbundene Anwendungen für Administration, Arbeitgeber, Mitarbeitende und Support innerhalb einer produktiven B2B-Finanzplattform.",
+      "contribution": "Entwicklung domänengetriebener Oberflächen und Echtzeitfunktionen mit Vite, TypeScript, MobX, React Context, HeroUI, Tailwind CSS, Android-Auslieferung und einer kontrollierten PWA-Cache-Schicht.",
+      "image": "/assets/projects/hesabo/homepage.jpg",
+      "imageAlt": "Hesabo-Website zur Plattform für flexiblen Zugriff auf Mitarbeitergehälter",
+      "technologies": [
+        "Vite",
+        "TypeScript",
+        "MobX",
+        "React Context",
+        "HeroUI",
+        "Capacitor"
+      ],
+      "href": "https://hesabo.com/",
+      "featured": true,
+      "accent": "coral"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "web-architecture",
+      "index": "01",
+      "title": "Webarchitektur",
+      "label": "01 · Webarchitektur",
+      "description": "Skalierbare Oberflächen, Rendering-Strategien und Domänengrenzen für Webanwendungen im Produktivbetrieb.",
+      "skills": [
+        "React",
+        "Next.js",
+        "Vite",
+        "TypeScript",
+        "SSR / CSR / SSG",
+        "ISR / PPR",
+        "DDD",
+        "Module Federation"
+      ]
+    },
+    {
+      "id": "mobile-pwa",
+      "index": "02",
+      "title": "Mobile- & PWA-Delivery",
+      "label": "02 · Mobile- & PWA-Delivery",
+      "description": "Android- und installierbare Webanwendungen mit bewusst gestaltetem Release- und Cache-Verhalten.",
+      "skills": [
+        "Capacitor",
+        "Android",
+        "Java plugins",
+        "Service Workers",
+        "Sichere automatische Updates",
+        "Cache-Versionierung",
+        "Offline-Fallbacks",
+        "Release-Stabilität"
+      ]
+    },
+    {
+      "id": "ui-quality",
+      "index": "03",
+      "title": "UI, State & Qualität",
+      "label": "03 · UI, State & Qualität",
+      "description": "Anpassungsfähige Designsysteme, vorhersehbarer State, Validierung, Observability und Testabdeckung.",
+      "skills": [
+        "Tailwind CSS",
+        "shadcn/ui",
+        "MUI / HeroUI",
+        "Zustand",
+        "Redux Toolkit",
+        "MobX",
+        "Unit- / E2E-Tests",
+        "Sentry"
+      ]
+    },
+    {
+      "id": "ai-systems-data",
+      "index": "04",
+      "title": "KI, Systeme & Daten",
+      "label": "04 · KI, Systeme & Daten",
+      "description": "Menschlich gesteuerte KI-Workflows, Echtzeitintegrationen, APIs und unterstützende Backend-Systeme.",
+      "skills": [
+        "Codex",
+        "Claude Max",
+        "Node.js",
+        "LangChain-Agenten",
+        "WebSockets / SignalR",
+        "REST / GraphQL",
+        "Prisma / SQL / MongoDB",
+        "Docker"
+      ]
+    }
+  ],
+  "education": {
+    "title": "B.Sc. Computer Engineering",
+    "institution": "Tehran Azad University · 2021 — heute",
+    "note": "Computer-Engineering-Studium parallel zur professionellen Produktentwicklung für Web und Mobile.",
+    "languages": [
+      "Persisch · Muttersprache/Zweisprachig",
+      "Englisch · Muttersprache/Zweisprachig",
+      "Deutsch · Grundkenntnisse"
+    ]
+  },
+  "socialLinks": [
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/in/nima-moradi-rad-1380s"
+    },
+    {
+      "id": "github",
+      "label": "GitHub",
+      "href": "https://github.com/Nima-Moradi1"
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "Metadata": {
+    "siteName": "Nima Moradirad · Portfolio",
+    "homeTitle": "Nima Moradirad · Senior Frontend Engineer",
+    "homeDescription": "Senior Frontend Engineer Nima Moradirad builds secure, high-performance products across web, Android, and PWA surfaces with scalable architecture and creative product thinking.",
+    "homeOgTitle": "Nima Moradirad · Senior Frontend Engineer",
+    "homeOgDescription": "A product engineering portfolio spanning scalable web, Android, PWA, real-time systems, and creative technology.",
+    "xoTitle": "XO Arena · Real-time multiplayer PWA",
+    "xoDescription": "A product case study for XO Arena: a type-safe real-time Tic-Tac-Toe platform with Socket.IO matchmaking, secure sessions, server-validated turns, profiles, and installable PWA support.",
+    "xoOgDescription": "A recorded product walkthrough and engineering case study for a modular, real-time multiplayer platform.",
+    "keywords": [
+      "frontend engineer",
+      "senior frontend engineer",
+      "React",
+      "Next.js",
+      "TypeScript",
+      "frontend architecture",
+      "PWA",
+      "Three.js",
+      "portfolio"
+    ],
+    "manifestName": "Signal Atelier Portfolio",
+    "manifestShortName": "Signal Atelier",
+    "manifestDescription": "A product engineering portfolio spanning scalable web, Android, PWA, real-time systems, and creative technology.",
+    "openGraphAlt": "Nima Moradirad — senior frontend engineer",
+    "openGraphLabel": "SIGNAL ATELIER · PORTFOLIO",
+    "openGraphHeadline": "Digital systems with signal."
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "current": "Current language: {language}",
+    "locales": {
+      "en": "English",
+      "fa": "فارسی",
+      "de": "Deutsch"
+    }
+  },
+  "Navigation": {
+    "goTop": "Go to top",
+    "primaryLabel": "Primary navigation",
+    "mobileLabel": "Mobile navigation",
+    "open": "Open navigation",
+    "close": "Close navigation",
+    "contactCta": "Start a conversation"
+  },
+  "Routes": {
+    "skipMain": "Skip to main content",
+    "loading": "Acquiring signal…",
+    "xoLoading": "Opening XO Arena case study…",
+    "errorEyebrow": "Signal interrupted",
+    "errorTitle": "Something unexpected crossed the wire.",
+    "errorDescription": "The rest of the site is safe. Try reconnecting this view.",
+    "errorRetry": "Reconnect",
+    "notFoundEyebrow": "404 · No signal here",
+    "notFoundTitle": "This coordinate is outside the known system.",
+    "notFoundReturn": "Return to the portfolio"
+  },
+  "Preloader": {
+    "ariaLabel": "Preparing portfolio: {progress}%",
+    "eyebrow": "Signal atelier · Initializing",
+    "title": "Building the first frame.",
+    "stages": {
+      "assets": "Loading assets",
+      "studio": "Warming the studio",
+      "room": "Rendering the room"
+    }
+  },
+  "Hero": {
+    "titleLine1": "I build for scalability,",
+    "titleLine2": "performance, and creativity.",
+    "primaryCta": "Explore selected work",
+    "resumeCta": "Download résumé",
+    "contactCta": "Open a channel",
+    "scrollCue": "Scroll forward into the next system",
+    "signalsLabel": "Areas of practice"
+  },
+  "About": {
+    "title": "Human products. Scalable systems.",
+    "engineering": "Engineering",
+    "creativity": "Creativity",
+    "portraitAlt": "Portrait of Nima Moradirad"
+  },
+  "Experience": {
+    "eyebrow": "Professional trajectory",
+    "title": "A career, bound in chapters.",
+    "fallbackTitle": "A career path written in four chapters.",
+    "fallbackDescription": "The 3D reader is replaced with a motion-safe edition on this device.",
+    "desktopDescription": "Scroll to turn the pages. Use arrow keys when the reader is focused.",
+    "mobileDescription": "A touch-optimized edition of the experience book.",
+    "regionLabel": "Scroll-controlled experience book",
+    "selectedSignals": "Selected signals",
+    "chapter": "Chapter {number}",
+    "scrollToTurn": "Scroll to turn",
+    "previous": "Previous experience",
+    "next": "Next experience",
+    "chaptersLabel": "Experience chapters"
+  },
+  "Projects": {
+    "eyebrow": "Selected work",
+    "title": "Work that ships.",
+    "description": "Three production-minded products across multiplayer, commerce, and B2B finance.",
+    "internalLabel": "View the {title} case study",
+    "externalLabel": "View {title} project in a new tab"
+  },
+  "Capabilities": {
+    "eyebrow": "Engineering capabilities",
+    "title": "Web to Android.",
+    "description": "Architecture, delivery, quality, and AI-assisted systems for production products.",
+    "regionLabel": "Horizontal engineering capabilities timeline",
+    "chromeTitle": "Skills & experience",
+    "chromeDescription": "Explore the tools, systems, and product work behind each discipline.",
+    "previous": "Previous capability group",
+    "next": "Next capability group",
+    "scrollableLabel": "Scrollable engineering capabilities",
+    "educationTitle": "Education & languages",
+    "languagesLabel": "Languages",
+    "stepsLabel": "Capability groups",
+    "showEducation": "Show education",
+    "showGroup": "Show capability group {number}"
+  },
+  "Contact": {
+    "eyebrow": "Open a channel",
+    "title": "Building something meaningful?",
+    "titleAccent": "Let’s make it clear.",
+    "description": "Share the product, the challenge, and the outcome you need."
+  },
+  "ContactForm": {
+    "fields": {
+      "name": "Your name",
+      "namePlaceholder": "How should I address you?",
+      "email": "Email address",
+      "emailPlaceholder": "you@company.com",
+      "message": "What are you building?",
+      "messagePlaceholder": "A little context, the challenge, and where you need help…",
+      "company": "Company"
+    },
+    "validation": {
+      "nameMin": "Please enter at least 2 characters.",
+      "nameMax": "Please keep your name under 80 characters.",
+      "email": "Please enter a valid email address.",
+      "messageMin": "Please share at least 20 characters.",
+      "messageMax": "Please keep your message under 2,000 characters.",
+      "company": "Automated submission rejected."
+    },
+    "submitting": "Transmitting…",
+    "submit": "Send the signal",
+    "preferEmail": "Prefer email?",
+    "openEmail": "Open your email app.",
+    "fallbackError": "The message could not be sent. Please use email instead.",
+    "fallbackSuccess": "Message received. Thank you.",
+    "connectionError": "The connection failed. Please use the email link instead."
+  },
+  "ApiContact": {
+    "tooLarge": "The message is too large.",
+    "rateLimited": "Too many attempts. Please wait a few minutes or use email.",
+    "invalidBody": "Invalid request body.",
+    "invalidFields": "Please review the form fields and try again.",
+    "received": "Message received.",
+    "notConfigured": "Direct delivery is not configured yet. Your message was not sent; please use email instead.",
+    "providerRejected": "The delivery service did not accept the message. It was not sent; please use email instead.",
+    "success": "Signal received. I’ll get back to you as soon as I can.",
+    "mailtoSubject": "Portfolio enquiry",
+    "mailtoSubjectWithName": "Portfolio enquiry from {name}",
+    "providerSubject": "Portfolio enquiry from {name}",
+    "emailBody": "Name: {name}\nEmail: {email}\n\n{message}"
+  },
+  "Footer": {
+    "backToTop": "Back to top",
+    "statement": "Designed as a signal system. Engineered for the real web.",
+    "copyright": "© {year} {name}",
+    "resume": "Résumé",
+    "top": "Top ↑"
+  },
+  "Theme": {
+    "toLight": "Turn the reading lamp off and switch to light mode",
+    "toDark": "Turn the reading lamp on and switch to dark mode",
+    "instruction": "{action}. Pull the chain downward."
+  },
+  "ResumeDialog": {
+    "label": "Document · PDF",
+    "title": "Nima Moradirad — Résumé",
+    "close": "Close résumé preview",
+    "previewAlt": "Nima Moradirad’s résumé, covering profile, capabilities, professional experience, selected work, education, and technical toolkit",
+    "description": "A concise, one-page overview of experience and selected work.",
+    "open": "Open full size",
+    "download": "Download PDF"
+  },
+  "Studio": {
+    "regionLabel": "Interactive 3D developer workstation",
+    "coding": "React Coding",
+    "drag": "Drag to inspect",
+    "pull": "Pull",
+    "fallbackAlt": "Stylized workstation with a developer, monitor, keyboard, résumé, and desk lamp"
+  },
+  "A11y": {
+    "externalSuffix": "opens in a new tab"
+  }
+}

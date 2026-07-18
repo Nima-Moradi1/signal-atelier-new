@@ -1,7 +1,11 @@
-export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
-  "https://your-domain.example";
+const deploymentHost =
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+const configuredSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (deploymentHost
+    ? deploymentHost.startsWith("http")
+      ? deploymentHost
+      : `https://${deploymentHost}`
+    : "https://nimamoradirad.com");
 
-export const siteName = "Nima Moradirad · Portfolio";
-export const siteDescription =
-  "Senior Frontend Engineer Nima Moradirad builds secure, high-performance products across web, Android, and PWA surfaces with scalable architecture and creative product thinking.";
+export const siteUrl = configuredSiteUrl.replace(/\/$/, "");

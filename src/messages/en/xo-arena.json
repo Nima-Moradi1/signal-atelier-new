@@ -1,0 +1,97 @@
+{
+  "skip": "Skip to case study",
+  "back": "Back to selected work",
+  "hero": {
+    "eyebrow": "Product case study · Real-time systems",
+    "title": "Real-time play, engineered end to end.",
+    "intro": "XO Arena is a modular, type-safe Tic-Tac-Toe product built around secure identity, server-authoritative matches, live matchmaking, persistent profiles, and installable mobile behavior.",
+    "availability": "Complete local product · Recorded walkthrough"
+  },
+  "system": {
+    "eyebrow": "System map · 02",
+    "title": "A small game with production-shaped systems.",
+    "description": "The board is deliberately simple. The engineering around it handles the harder product concerns: identity, concurrency, authority, persistence, responsive delivery, and clear feedback.",
+    "stackLabel": "XO Arena technology stack"
+  },
+  "signals": [
+    {
+      "id": "identity",
+      "title": "Secure identity",
+      "text": "httpOnly sessions, protected user flows, avatar uploads, and validation at trust boundaries."
+    },
+    {
+      "id": "rooms",
+      "title": "Live rooms",
+      "text": "Socket.IO matchmaking and room events keep both players synchronized through every turn."
+    },
+    {
+      "id": "play",
+      "title": "Authoritative play",
+      "text": "A shared, type-safe game engine supports server-validated moves and dependable match state."
+    },
+    {
+      "id": "opponents",
+      "title": "Adaptive opponents",
+      "text": "Four computer difficulty modes turn the same game model into progressively stronger challenges."
+    },
+    {
+      "id": "client",
+      "title": "Installable client",
+      "text": "Responsive, touch-friendly PWA behavior keeps the complete product usable on mobile surfaces."
+    },
+    {
+      "id": "history",
+      "title": "Persistent history",
+      "text": "Prisma and MySQL retain profiles, match outcomes, move counts, and recent activity."
+    }
+  ],
+  "gallery": {
+    "eyebrow": "Product surfaces · 03",
+    "title": "The complete flow, captured in context.",
+    "description": "Each image is served as a compact WebP and loaded only as it approaches the viewport. The frames document the real local product rather than a reconstructed mockup.",
+    "items": [
+      {
+        "id": "landing",
+        "alt": "XO Arena landing page with product introduction, a live board preview, and feature cards",
+        "title": "Product entry",
+        "description": "A theme-aware landing experience explains the game and establishes auth, multiplayer, PWA, and design-system signals before entry."
+      },
+      {
+        "id": "lobby",
+        "alt": "XO Arena lobby showing four computer difficulty levels, quick online matchmaking, and room creation",
+        "title": "Matchmaking lobby",
+        "description": "Players can choose four computer difficulties, enter quick matchmaking, or create an online room from one responsive surface."
+      },
+      {
+        "id": "game-room",
+        "alt": "XO Arena completed match with a Tic-Tac-Toe board, players, match actions, and a seven-turn move log",
+        "title": "Authoritative game room",
+        "description": "The match view combines board state, player identity, replay actions, outcome messaging, and an auditable turn-by-turn move log."
+      },
+      {
+        "id": "profile",
+        "alt": "XO Arena profile showing nickname and avatar controls alongside a persistent recent-game history table",
+        "title": "Persistent player history",
+        "description": "Profile editing and recent match history make identity and persistence visible, including mode, opponent, outcome, and move count."
+      }
+    ]
+  },
+  "deployment": {
+    "eyebrow": "Deployment note · 04",
+    "title": "Why this is a case study—not a temporary demo.",
+    "paragraph1": "XO Arena’s complete experience depends on persistent services: secure sessions, an application server, Socket.IO rooms, a relational database, and uploaded-media storage. Rather than publish a partially provisioned build that misrepresents the product, this page documents the complete local system through its actual recorded flows and product captures.",
+    "paragraph2": "The implementation is shaped for deployment; the presentation is intentionally honest about the infrastructure a reliable real-time product requires."
+  },
+  "next": {
+    "eyebrow": "Continue the portfolio",
+    "title": "Explore the systems behind the surfaces.",
+    "work": "Selected work",
+    "contact": "Start a conversation"
+  },
+  "video": {
+    "ariaLabel": "XO Arena product walkthrough showing authentication, the multiplayer lobby, game rooms, computer opponents, and profile history",
+    "buffering": "Buffering product walkthrough",
+    "capture": "Product capture · 23 sec",
+    "dimensions": "1166 × 720"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "skip": "Zur Fallstudie springen",
+  "back": "Zurück zu den ausgewählten Projekten",
+  "hero": {
+    "eyebrow": "Produktfallstudie · Echtzeitsysteme",
+    "title": "Echtzeitspiel – von Anfang bis Ende konsequent entwickelt.",
+    "intro": "XO Arena ist ein modulares, typsicheres Tic-Tac-Toe-Produkt rund um sichere Identitäten, serverautorisierte Partien, Live-Matchmaking, persistente Profile und installierbare Nutzung auf Mobilgeräten.",
+    "availability": "Vollständiges lokales Produkt · Aufgezeichnete Produktführung"
+  },
+  "system": {
+    "eyebrow": "Systemübersicht · 02",
+    "title": "Ein kleines Spiel auf produktionsreifer Systembasis.",
+    "description": "Das Spielfeld ist bewusst einfach gehalten. Die Technik dahinter löst die anspruchsvolleren Produktfragen: Identität, Nebenläufigkeit, Autorität, Persistenz, responsive Bereitstellung und klares Feedback.",
+    "stackLabel": "Technologie-Stack von XO Arena"
+  },
+  "signals": [
+    {
+      "id": "identity",
+      "title": "Sichere Identität",
+      "text": "httpOnly-Sessions, geschützte Nutzerabläufe, Avatar-Uploads und Validierung an Vertrauensgrenzen."
+    },
+    {
+      "id": "rooms",
+      "title": "Synchronisierte Spielräume",
+      "text": "Socket.IO-Matchmaking und Raum-Events halten beide Spieler bei jedem Zug synchron."
+    },
+    {
+      "id": "play",
+      "title": "Serverautorisiertes Spiel",
+      "text": "Eine gemeinsame, typsichere Spiel-Engine ermöglicht servervalidierte Züge und einen verlässlichen Spielzustand."
+    },
+    {
+      "id": "opponents",
+      "title": "Adaptive Gegner",
+      "text": "Vier Schwierigkeitsstufen für Computergegner machen aus demselben Spielmodell zunehmend anspruchsvolle Herausforderungen."
+    },
+    {
+      "id": "client",
+      "title": "Installierbarer Client",
+      "text": "Responsives, touchfreundliches PWA-Verhalten macht das vollständige Produkt auch auf mobilen Geräten nutzbar."
+    },
+    {
+      "id": "history",
+      "title": "Persistenter Verlauf",
+      "text": "Prisma und MySQL speichern Profile, Spielergebnisse, Zugzahlen und die jüngsten Aktivitäten."
+    }
+  ],
+  "gallery": {
+    "eyebrow": "Produktoberflächen · 03",
+    "title": "Der vollständige Ablauf im realen Kontext.",
+    "description": "Jedes Bild wird als kompaktes WebP ausgeliefert und erst geladen, wenn es sich dem sichtbaren Bereich nähert. Die Aufnahmen dokumentieren das echte lokale Produkt statt einer nachgebauten Darstellung.",
+    "items": [
+      {
+        "id": "landing",
+        "alt": "Startseite von XO Arena mit Produkteinführung, Live-Vorschau des Spielfelds und Funktionskarten",
+        "title": "Produkteinstieg",
+        "description": "Eine themefähige Startseite erklärt das Spiel und führt bereits vor dem Einstieg Authentifizierung, Multiplayer, PWA und das Designsystem ein."
+      },
+      {
+        "id": "lobby",
+        "alt": "Lobby von XO Arena mit vier Schwierigkeitsstufen für Computergegner, schnellem Online-Matchmaking und Raumerstellung",
+        "title": "Matchmaking-Lobby",
+        "description": "Spieler können über eine responsive Oberfläche zwischen vier Computerstufen wählen, schnelles Matchmaking starten oder einen Online-Raum erstellen."
+      },
+      {
+        "id": "game-room",
+        "alt": "Abgeschlossene Partie in XO Arena mit Tic-Tac-Toe-Spielfeld, Spielern, Spielaktionen und einem Protokoll über sieben Züge",
+        "title": "Serverautorisierter Spielraum",
+        "description": "Die Spielansicht verbindet Spielfeldzustand, Spieleridentität, Wiederholungsaktionen, Ergebnismeldungen und ein nachvollziehbares Zugprotokoll."
+      },
+      {
+        "id": "profile",
+        "alt": "XO-Arena-Profil mit Einstellungen für Spitzname und Avatar sowie einer persistenten Tabelle der letzten Partien",
+        "title": "Persistenter Spielerverlauf",
+        "description": "Profilbearbeitung und die jüngsten Partien machen Identität und Persistenz sichtbar – einschließlich Modus, Gegner, Ergebnis und Zugzahl."
+      }
+    ]
+  },
+  "deployment": {
+    "eyebrow": "Hinweis zum Deployment · 04",
+    "title": "Warum dies eine Fallstudie ist – und keine kurzlebige Demo.",
+    "paragraph1": "Das vollständige Erlebnis von XO Arena ist auf persistente Dienste angewiesen: sichere Sessions, einen Anwendungsserver, Socket.IO-Räume, eine relationale Datenbank und Speicher für hochgeladene Medien. Statt einen nur teilweise bereitgestellten Build zu veröffentlichen, der das Produkt falsch darstellt, dokumentiert diese Seite das vollständige lokale System anhand real aufgezeichneter Abläufe und Produktaufnahmen.",
+    "paragraph2": "Die Implementierung ist auf ein Deployment ausgelegt; die Präsentation benennt bewusst und transparent die Infrastruktur, die ein verlässliches Echtzeitprodukt benötigt."
+  },
+  "next": {
+    "eyebrow": "Im Portfolio weiterlesen",
+    "title": "Die Systeme hinter den Oberflächen entdecken.",
+    "work": "Ausgewählte Projekte",
+    "contact": "Gespräch beginnen"
+  },
+  "video": {
+    "ariaLabel": "Produktführung durch XO Arena mit Authentifizierung, Multiplayer-Lobby, Spielräumen, Computergegnern und Profilverlauf",
+    "buffering": "Produktführung wird gepuffert",
+    "capture": "Produktaufnahme · 23 Sek.",
+    "dimensions": "1166 × 720"
+  }
+}

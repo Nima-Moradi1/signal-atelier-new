@@ -1,0 +1,289 @@
+{
+  "identity": {
+    "name": "نیما مرادی‌راد",
+    "initials": "NM",
+    "role": "مهندس ارشد فرانت‌اند",
+    "shortRole": "مهندسی محصول · وب + موبایل",
+    "location": "تهران، ایران",
+    "availability": "بیش از ۶ سال تجربه در مهندسی وب، موبایل و PWA",
+    "email": "nimamoradirad@gmail.com",
+    "resumeUrl": "/nima-moradirad-resume.pdf",
+    "resumePreview": "/assets/nima-moradirad-resume-preview.webp",
+    "intro": "محصولاتی امن و پربازده برای وب، Android و PWA می‌سازم؛ از معماری React تا سامانه‌های بلادرنگ.",
+    "statement": "محصولات مقیاس‌پذیر وب و موبایل می‌سازم؛ جایی که کارایی، پایداری و طراحی شفاف در کنار هم کار می‌کنند."
+  },
+  "navigation": [
+    { "id": "about", "label": "دربارهٔ من", "href": "/#about" },
+    { "id": "experience", "label": "تجربه‌ها", "href": "/#experience" },
+    { "id": "work", "label": "پروژه‌ها", "href": "/#work" },
+    { "id": "capabilities", "label": "توانمندی‌ها", "href": "/#capabilities" },
+    { "id": "contact", "label": "ارتباط", "href": "/#contact" }
+  ],
+  "signals": ["مقیاس‌پذیری", "کارایی", "خلاقیت", "مهندسی محصول"],
+  "about": {
+    "eyebrow": "مهندسی محصول برای وب + موبایل",
+    "paragraphs": [
+      "سامانه‌های React و TypeScript را به محصولات قابل‌اعتماد وب، Android و PWA تبدیل می‌کنم. در حوزه‌های مالی، تجارت الکترونیک، دولتی و پلتفرم‌های بلادرنگ، با معماری شفاف و گردش‌کارهای مبتنی بر هوش مصنوعی سریع‌تر تحویل می‌دهم، بی‌آنکه قضاوت مهندسی را کنار بگذارم."
+    ],
+    "principles": [
+      {
+        "id": "boundaries",
+        "index": "۰۱",
+        "title": "مرزهای شفاف، مقیاس‌پذیری می‌آفرینند",
+        "text": "دامنه‌های متمرکز و قراردادهای مشترک، محصول را سازگار و توسعه‌پذیر نگه می‌دارند."
+      },
+      {
+        "id": "performance",
+        "index": "۰۲",
+        "title": "کارایی، اعتماد می‌سازد",
+        "text": "رندر سریع، کش مؤثر و انتشار مطمئن باعث می‌شوند محصول قابل‌اعتماد به نظر برسد."
+      },
+      {
+        "id": "rigor",
+        "index": "۰۳",
+        "title": "دقت، زمینه‌ساز خلاقیت است",
+        "text": "تحویل دسترس‌پذیر و اعتبارسنجی‌شده، رابطی خلاقانه را به محصولی کاربردی تبدیل می‌کند."
+      }
+    ]
+  },
+  "experience": [
+    {
+      "id": "hesabo",
+      "period": "فوریهٔ ۲۰۲۵ — اکنون",
+      "role": "توسعه‌دهندهٔ ارشد فرانت‌اند",
+      "company": "Hesabo · تهران، ایران",
+      "summary": "در حال شکل‌دادن به معماری فرانت‌اند و فرایند تحویل یک پلتفرم مالی B2B با تجربه‌های مدیریت، کارفرما، کارمند و پشتیبانی.",
+      "highlights": [
+        "راهنمایی و آماده‌سازی مهندسان تازه‌وارد با تمرکز بر جریان‌های کسب‌وکار، کد نگه‌داشت‌پذیر و مرزهای دامنه‌محور.",
+        "توسعه و نگه‌داری اپلیکیشن‌های Android با Capacitor، یکپارچه‌سازی‌های پلتفرمی و افزونه‌های سفارشی Java.",
+        "مالکیت لایهٔ سفارشی PWA با به‌روزرسانی خودکار کنترل‌شده، نسخه‌بندی و بی‌اعتبارسازی کش و مسیرهای جایگزین آفلاین.",
+        "بهبود کارایی ساخت، دفاع در برابر XSS، اعتبارسنجی، مجوزدهی و قابلیت‌های بلادرنگ WebSocket/SignalR.",
+        "استفاده از Codex و Claude Max برای معماری، بازآرایی، بازبینی، تست، مستندسازی و ساخت گردش‌کارهای تکرارپذیر تحویل."
+      ],
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Capacitor",
+        "Android",
+        "PWA",
+        "WebSockets",
+        "تحویل با کمک هوش مصنوعی"
+      ]
+    },
+    {
+      "id": "basilica",
+      "period": "مارس ۲۰۲۴ — مارس ۲۰۲۵",
+      "role": "مهندس ارشد فرانت‌اند",
+      "company": "Basilica Finance · تهران، ایران",
+      "summary": "رهبری تحویل فرانت‌اند برای یک PWA مالی مقیاس‌پذیر، طراحی‌شده برای مسیرهای امن کاربر و حجم بالای درخواست.",
+      "highlights": [
+        "ساخت احراز هویت و جریان‌های محافظت‌شدهٔ محصول با Next.js، TypeScript، Zustand، Tailwind CSS و MUI.",
+        "ارائهٔ بهبودهای کارایی با تمرکز بر Lighthouse و حفظ کیفیت انتشار از طریق بازبینی در GitHub/GitLab."
+      ],
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Zustand",
+        "Tailwind CSS",
+        "Material UI",
+        "PWA"
+      ]
+    },
+    {
+      "id": "barname-negar",
+      "period": "ژانویهٔ ۲۰۲۳ — مارس ۲۰۲۴",
+      "role": "توسعه‌دهندهٔ فرانت‌اند",
+      "company": "BarnameNegar · تهران، ایران",
+      "summary": "ساخت داشبوردها و پنل‌های داخلی دولتی با رندر سمت سرور و گردش‌کارهای متصل به REST.",
+      "highlights": [
+        "تحویل اپلیکیشن‌های Vite و TypeScript با SSR، APIهای REST، Tailwind CSS، shadcn/ui و مدیریت وضعیت مبتنی بر Redux."
+      ],
+      "technologies": [
+        "Vite",
+        "TypeScript",
+        "SSR",
+        "REST API",
+        "Tailwind CSS",
+        "shadcn/ui",
+        "Redux"
+      ]
+    },
+    {
+      "id": "kzi",
+      "period": "دسامبر ۲۰۲۰ — سپتامبر ۲۰۲۲",
+      "role": "توسعه‌دهندهٔ React",
+      "company": "KZI",
+      "summary": "تحویل تجربه‌های تجارت الکترونیک و محتوایی با React، JavaScript، کتابخانه‌های کامپوننت و مدیریت وضعیت مدرن.",
+      "highlights": [
+        "حفظ کارایی Lighthouse و رفتار قابل‌اعتماد PWA/SPA با Material UI و Redux Toolkit.",
+        "کار با Vite، TypeScript، HeroUI، React Hook Form، Yup و معماری اپلیکیشن مبتنی بر مسیریابی."
+      ],
+      "technologies": [
+        "React",
+        "TypeScript",
+        "Material UI",
+        "Redux Toolkit",
+        "PWA",
+        "React Hook Form",
+        "Yup"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "xo-arena",
+      "number": "۰۱",
+      "title": "XO Arena",
+      "category": "PWA چندنفرهٔ بلادرنگ · مطالعهٔ موردی محصول",
+      "summary": "یک PWA چندنفره و type-safe با اتاق‌های زنده، نشست‌های امن، حریفان رایانه‌ای و پشتیبانی از نصب روی موبایل.",
+      "contribution": "ساخت قراردادهای مشترک و موتور بازی اعتبارسنجی‌شده در سرور با Next.js، TypeScript، Express، Socket.IO، Prisma، MySQL، Zod، بارگذاری آواتار و نشست‌های httpOnly.",
+      "image": "/assets/projects/xo-arena/game-room.webp",
+      "imageAlt": "اتاق بازی زندهٔ XO Arena با یک مسابقهٔ کامل‌شدهٔ دوز",
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Socket.IO",
+        "Prisma",
+        "MySQL",
+        "PWA"
+      ],
+      "href": "/projects/xo-arena",
+      "featured": true,
+      "accent": "lime"
+    },
+    {
+      "id": "emerald-case",
+      "number": "۰۲",
+      "title": "Emerald Case",
+      "category": "تجارت الکترونیک فول‌استک · اکتبر–نوامبر ۲۰۲۳",
+      "summary": "فروشگاه چندزبانهٔ قاب سفارشی موبایل با بارگذاری تصویر، احراز هویت، پرداخت و پوستهٔ واکنش‌گرا.",
+      "contribution": "ساخت محصول با Next.js و TypeScript؛ استفاده از Prisma و MongoDB برای داده، Stripe برای پرداخت، Resend برای ایمیل و Zustand به‌همراه Context برای وضعیت کلاینت.",
+      "image": "/assets/projects/emerald-case/homepage.jpg",
+      "imageAlt": "فروشگاه Emerald Case در حال نمایش سازندهٔ قاب سفارشی موبایل",
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Prisma",
+        "MongoDB",
+        "Stripe",
+        "i18n"
+      ],
+      "href": "https://emerald-case.vercel.app/en/",
+      "featured": true,
+      "accent": "violet"
+    },
+    {
+      "id": "hesabo-platform",
+      "number": "۰۳",
+      "title": "Hesabo Platform",
+      "category": "پلتفرم مالی B2B · محصول عملیاتی",
+      "summary": "چهار سطح متصل مدیریت، کارفرما، کارمند و پشتیبانی برای یک پلتفرم مالی B2B در حال بهره‌برداری.",
+      "contribution": "توسعهٔ رابط‌های دامنه‌محور و قابلیت‌های بلادرنگ با Vite، TypeScript، MobX، React Context، HeroUI، Tailwind CSS، تحویل Android و لایهٔ کش کنترل‌شدهٔ PWA.",
+      "image": "/assets/projects/hesabo/homepage.jpg",
+      "imageAlt": "وب‌سایت Hesabo در حال معرفی پلتفرم دسترسی کارکنان به حقوق",
+      "technologies": [
+        "Vite",
+        "TypeScript",
+        "MobX",
+        "React Context",
+        "HeroUI",
+        "Capacitor"
+      ],
+      "href": "https://hesabo.com/",
+      "featured": true,
+      "accent": "coral"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "web-architecture",
+      "index": "۰۱",
+      "title": "معماری وب",
+      "label": "۰۱ · معماری وب",
+      "description": "رابط‌های مقیاس‌پذیر، راهبردهای رندر و مرزهای دامنه برای محصولات واقعی وب.",
+      "skills": [
+        "React",
+        "Next.js",
+        "Vite",
+        "TypeScript",
+        "SSR / CSR / SSG",
+        "ISR / PPR",
+        "DDD",
+        "Module Federation"
+      ]
+    },
+    {
+      "id": "mobile-pwa",
+      "index": "۰۲",
+      "title": "تحویل موبایل و PWA",
+      "label": "۰۲ · تحویل موبایل و PWA",
+      "description": "تجربه‌های Android و وب قابل‌نصب با رفتار سنجیده در انتشار و کش.",
+      "skills": [
+        "Capacitor",
+        "Android",
+        "افزونه‌های Java",
+        "Service Workers",
+        "به‌روزرسانی خودکار امن",
+        "نسخه‌بندی کش",
+        "راهکارهای جایگزین آفلاین",
+        "پایداری انتشار"
+      ]
+    },
+    {
+      "id": "ui-quality",
+      "index": "۰۳",
+      "title": "رابط کاربری، وضعیت و کیفیت",
+      "label": "۰۳ · رابط کاربری، وضعیت و کیفیت",
+      "description": "سیستم‌های طراحی سازگار، وضعیت پیش‌بینی‌پذیر، اعتبارسنجی، مشاهده‌پذیری و پوشش تست.",
+      "skills": [
+        "Tailwind CSS",
+        "shadcn/ui",
+        "MUI / HeroUI",
+        "Zustand",
+        "Redux Toolkit",
+        "MobX",
+        "تست واحد / E2E",
+        "Sentry"
+      ]
+    },
+    {
+      "id": "ai-systems-data",
+      "index": "۰۴",
+      "title": "هوش مصنوعی، سامانه‌ها و داده",
+      "label": "۰۴ · هوش مصنوعی، سامانه‌ها و داده",
+      "description": "گردش‌کارهای هوش مصنوعی با هدایت انسان، یکپارچه‌سازی‌های بلادرنگ، APIها و سامانه‌های بک‌اند پشتیبان.",
+      "skills": [
+        "Codex",
+        "Claude Max",
+        "Node.js",
+        "عامل‌های LangChain",
+        "WebSockets / SignalR",
+        "REST / GraphQL",
+        "Prisma / SQL / MongoDB",
+        "Docker"
+      ]
+    }
+  ],
+  "education": {
+    "title": "کارشناسی مهندسی کامپیوتر",
+    "institution": "دانشگاه آزاد تهران · ۲۰۲۱ — اکنون",
+    "note": "تحصیل در مهندسی کامپیوتر هم‌زمان با تحویل حرفه‌ای محصولات وب و موبایل.",
+    "languages": [
+      "فارسی · زبان مادری/دوزبانه",
+      "انگلیسی · زبان مادری/دوزبانه",
+      "آلمانی · مقدماتی"
+    ]
+  },
+  "socialLinks": [
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/in/nima-moradi-rad-1380s"
+    },
+    {
+      "id": "github",
+      "label": "GitHub",
+      "href": "https://github.com/Nima-Moradi1"
+    }
+  ]
+}

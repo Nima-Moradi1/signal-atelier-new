@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ErrorPage({
   error,
@@ -9,17 +10,19 @@ export default function ErrorPage({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations("Routes");
+
   useEffect(() => {
     console.error(error);
   }, [error]);
 
   return (
     <main className="route-message">
-      <p>Signal interrupted</p>
-      <h1>Something unexpected crossed the wire.</h1>
-      <p>The rest of the site is safe. Try reconnecting this view.</p>
+      <p>{t("errorEyebrow")}</p>
+      <h1>{t("errorTitle")}</h1>
+      <p>{t("errorDescription")}</p>
       <button type="button" onClick={reset}>
-        Reconnect
+        {t("errorRetry")}
       </button>
     </main>
   );

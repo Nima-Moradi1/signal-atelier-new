@@ -1,18 +1,30 @@
 import { z } from "zod";
+import englishMessages from "@/messages/en/common.json";
 
-export const contactSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Please enter at least 2 characters.")
-    .max(80, "Please keep your name under 80 characters."),
-  email: z.email("Please enter a valid email address."),
-  message: z
-    .string()
-    .trim()
-    .min(20, "Please share at least 20 characters.")
-    .max(2000, "Please keep your message under 2,000 characters."),
-  company: z.string().max(0, "Automated submission rejected.").optional(),
-});
+export type ContactValidationMessages = {
+  nameMin: string;
+  nameMax: string;
+  email: string;
+  messageMin: string;
+  messageMax: string;
+  company: string;
+};
+
+export function createContactSchema(messages: ContactValidationMessages) {
+  return z.object({
+    name: z.string().trim().min(2, messages.nameMin).max(80, messages.nameMax),
+    email: z.email(messages.email),
+    message: z
+      .string()
+      .trim()
+      .min(20, messages.messageMin)
+      .max(2000, messages.messageMax),
+    company: z.string().max(0, messages.company).optional(),
+  });
+}
+
+export const contactSchema = createContactSchema(
+  englishMessages.ContactForm.validation,
+);
 
 export type ContactFormValues = z.infer<typeof contactSchema>;

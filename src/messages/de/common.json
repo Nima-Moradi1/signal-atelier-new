@@ -1,0 +1,198 @@
+{
+  "Metadata": {
+    "siteName": "Nima Moradirad · Portfolio",
+    "homeTitle": "Nima Moradirad · Senior Frontend Engineer",
+    "homeDescription": "Senior Frontend Engineer Nima Moradirad entwickelt sichere, leistungsstarke Produkte für Web, Android und PWA – mit skalierbarer Architektur und kreativem Produktdenken.",
+    "homeOgTitle": "Nima Moradirad · Senior Frontend Engineer",
+    "homeOgDescription": "Ein Portfolio für Produktentwicklung rund um skalierbare Webanwendungen, Android, PWA, Echtzeitsysteme und kreative Technologien.",
+    "xoTitle": "XO Arena · Echtzeit-Multiplayer-PWA",
+    "xoDescription": "Eine Produktfallstudie zu XO Arena: eine typsichere Echtzeitplattform für Tic-Tac-Toe mit Socket.IO-Matchmaking, sicheren Sessions, servervalidierten Spielzügen, Profilen und installierbarer PWA-Unterstützung.",
+    "xoOgDescription": "Eine aufgezeichnete Produktführung und technische Fallstudie zu einer modularen Echtzeit-Multiplayer-Plattform.",
+    "keywords": [
+      "Frontend Engineer",
+      "Senior Frontend Engineer",
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Frontend-Architektur",
+      "PWA",
+      "Three.js",
+      "Portfolio"
+    ],
+    "manifestName": "Signal Atelier Portfolio",
+    "manifestShortName": "Signal Atelier",
+    "manifestDescription": "Ein Portfolio für Produktentwicklung rund um skalierbare Webanwendungen, Android, PWA, Echtzeitsysteme und kreative Technologien.",
+    "openGraphAlt": "Nima Moradirad — Senior Frontend Engineer",
+    "openGraphLabel": "SIGNAL ATELIER · PORTFOLIO",
+    "openGraphHeadline": "Digitale Systeme mit klarer Wirkung."
+  },
+  "LocaleSwitcher": {
+    "label": "Sprache wechseln",
+    "current": "Aktuelle Sprache: {language}",
+    "locales": {
+      "en": "English",
+      "fa": "فارسی",
+      "de": "Deutsch"
+    }
+  },
+  "Navigation": {
+    "goTop": "Nach oben",
+    "primaryLabel": "Hauptnavigation",
+    "mobileLabel": "Mobile Navigation",
+    "open": "Navigation öffnen",
+    "close": "Navigation schließen",
+    "contactCta": "Gespräch beginnen"
+  },
+  "Routes": {
+    "skipMain": "Zum Hauptinhalt springen",
+    "loading": "Signal wird erfasst…",
+    "xoLoading": "XO-Arena-Fallstudie wird geöffnet…",
+    "errorEyebrow": "Signal unterbrochen",
+    "errorTitle": "Etwas Unerwartetes hat die Verbindung gestört.",
+    "errorDescription": "Der Rest der Website ist weiterhin verfügbar. Versuchen Sie, diese Ansicht erneut zu laden.",
+    "errorRetry": "Erneut verbinden",
+    "notFoundEyebrow": "404 · Hier ist kein Signal",
+    "notFoundTitle": "Diese Koordinate liegt außerhalb des bekannten Systems.",
+    "notFoundReturn": "Zurück zum Portfolio"
+  },
+  "Preloader": {
+    "ariaLabel": "Portfolio wird vorbereitet: {progress} %",
+    "eyebrow": "Signal Atelier · Initialisierung",
+    "title": "Der erste Frame entsteht.",
+    "stages": {
+      "assets": "Assets werden geladen",
+      "studio": "Studio wird vorbereitet",
+      "room": "Raum wird gerendert"
+    }
+  },
+  "Hero": {
+    "titleLine1": "Ich entwickle mit Fokus auf Skalierbarkeit,",
+    "titleLine2": "Performance und Kreativität.",
+    "primaryCta": "Ausgewählte Projekte entdecken",
+    "resumeCta": "Lebenslauf herunterladen",
+    "contactCta": "Kontakt aufnehmen",
+    "scrollCue": "Weiter zum nächsten System scrollen",
+    "signalsLabel": "Arbeitsfelder"
+  },
+  "About": {
+    "title": "Produkte für Menschen. Skalierbare Systeme.",
+    "engineering": "Engineering",
+    "creativity": "Kreativität",
+    "portraitAlt": "Porträt von Nima Moradirad"
+  },
+  "Experience": {
+    "eyebrow": "Beruflicher Weg",
+    "title": "Eine Laufbahn in Kapiteln.",
+    "fallbackTitle": "Ein Berufsweg, erzählt in vier Kapiteln.",
+    "fallbackDescription": "Auf diesem Gerät wird die 3D-Ansicht durch eine bewegungsarme Ausgabe ersetzt.",
+    "desktopDescription": "Scrollen Sie, um umzublättern. Wenn der Reader fokussiert ist, können Sie auch die Pfeiltasten verwenden.",
+    "mobileDescription": "Eine für Touch-Eingaben optimierte Ausgabe des Erfahrungsbuchs.",
+    "regionLabel": "Scrollgesteuertes Erfahrungsbuch",
+    "selectedSignals": "Ausgewählte Schwerpunkte",
+    "chapter": "Kapitel {number}",
+    "scrollToTurn": "Scrollen zum Umblättern",
+    "previous": "Vorherige Erfahrung",
+    "next": "Nächste Erfahrung",
+    "chaptersLabel": "Kapitel der Berufserfahrung"
+  },
+  "Projects": {
+    "eyebrow": "Ausgewählte Projekte",
+    "title": "Arbeit, die live geht.",
+    "description": "Drei produktionsreife Produkte aus Multiplayer, E-Commerce und B2B-Finanzwesen.",
+    "internalLabel": "Fallstudie zu {title} ansehen",
+    "externalLabel": "Projekt {title} in einem neuen Tab öffnen"
+  },
+  "Capabilities": {
+    "eyebrow": "Technische Kompetenzen",
+    "title": "Vom Web bis Android.",
+    "description": "Architektur, Delivery, Qualität und KI-gestützte Systeme für produktive Anwendungen.",
+    "regionLabel": "Horizontale Zeitleiste der technischen Kompetenzen",
+    "chromeTitle": "Kompetenzen & Erfahrung",
+    "chromeDescription": "Entdecken Sie die Werkzeuge, Systeme und Produktarbeit hinter den einzelnen Disziplinen.",
+    "previous": "Vorherige Kompetenzgruppe",
+    "next": "Nächste Kompetenzgruppe",
+    "scrollableLabel": "Scrollbare technische Kompetenzen",
+    "educationTitle": "Ausbildung & Sprachen",
+    "languagesLabel": "Sprachen",
+    "stepsLabel": "Kompetenzgruppen",
+    "showEducation": "Ausbildung anzeigen",
+    "showGroup": "Kompetenzgruppe {number} anzeigen"
+  },
+  "Contact": {
+    "eyebrow": "Kontakt aufnehmen",
+    "title": "Entsteht gerade etwas Bedeutendes?",
+    "titleAccent": "Bringen wir Klarheit hinein.",
+    "description": "Beschreiben Sie das Produkt, die Herausforderung und das gewünschte Ergebnis."
+  },
+  "ContactForm": {
+    "fields": {
+      "name": "Ihr Name",
+      "namePlaceholder": "Wie darf ich Sie ansprechen?",
+      "email": "E-Mail-Adresse",
+      "emailPlaceholder": "sie@unternehmen.de",
+      "message": "Woran arbeiten Sie?",
+      "messagePlaceholder": "Ein wenig Kontext, die Herausforderung und wobei Sie Unterstützung benötigen…",
+      "company": "Unternehmen"
+    },
+    "validation": {
+      "nameMin": "Bitte geben Sie mindestens 2 Zeichen ein.",
+      "nameMax": "Der Name darf höchstens 80 Zeichen lang sein.",
+      "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "messageMin": "Bitte geben Sie mindestens 20 Zeichen ein.",
+      "messageMax": "Die Nachricht darf höchstens 2.000 Zeichen lang sein.",
+      "company": "Automatisierte Übermittlung abgelehnt."
+    },
+    "submitting": "Wird gesendet…",
+    "submit": "Nachricht senden",
+    "preferEmail": "Lieber per E-Mail?",
+    "openEmail": "E-Mail-App öffnen.",
+    "fallbackError": "Die Nachricht konnte nicht gesendet werden. Bitte verwenden Sie stattdessen E-Mail.",
+    "fallbackSuccess": "Nachricht erhalten. Vielen Dank.",
+    "connectionError": "Die Verbindung ist fehlgeschlagen. Bitte verwenden Sie stattdessen den E-Mail-Link."
+  },
+  "ApiContact": {
+    "tooLarge": "Die Nachricht ist zu groß.",
+    "rateLimited": "Zu viele Versuche. Bitte warten Sie einige Minuten oder verwenden Sie E-Mail.",
+    "invalidBody": "Ungültiger Anfrageinhalt.",
+    "invalidFields": "Bitte prüfen Sie die Formularfelder und versuchen Sie es erneut.",
+    "received": "Nachricht erhalten.",
+    "notConfigured": "Der direkte Versand ist noch nicht eingerichtet. Ihre Nachricht wurde nicht gesendet; bitte verwenden Sie stattdessen E-Mail.",
+    "providerRejected": "Der Versanddienst hat die Nachricht nicht angenommen. Sie wurde nicht gesendet; bitte verwenden Sie stattdessen E-Mail.",
+    "success": "Nachricht erhalten. Ich melde mich so bald wie möglich.",
+    "mailtoSubject": "Portfolio-Anfrage",
+    "mailtoSubjectWithName": "Portfolio-Anfrage von {name}",
+    "providerSubject": "Portfolio-Anfrage von {name}",
+    "emailBody": "Name: {name}\nE-Mail: {email}\n\n{message}"
+  },
+  "Footer": {
+    "backToTop": "Nach oben",
+    "statement": "Als Signalsystem gestaltet. Für das echte Web entwickelt.",
+    "copyright": "© {year} {name}",
+    "resume": "Lebenslauf",
+    "top": "Nach oben ↑"
+  },
+  "Theme": {
+    "toLight": "Leselampe ausschalten und zum hellen Modus wechseln",
+    "toDark": "Leselampe einschalten und zum dunklen Modus wechseln",
+    "instruction": "{action}. Ziehen Sie die Kette nach unten."
+  },
+  "ResumeDialog": {
+    "label": "Dokument · PDF",
+    "title": "Nima Moradirad — Lebenslauf",
+    "close": "Lebenslaufvorschau schließen",
+    "previewAlt": "Lebenslauf von Nima Moradirad mit Profil, Kompetenzen, Berufserfahrung, ausgewählten Projekten, Ausbildung und technischem Werkzeugkasten",
+    "description": "Ein kompakter einseitiger Überblick über Erfahrung und ausgewählte Projekte.",
+    "open": "In voller Größe öffnen",
+    "download": "PDF herunterladen"
+  },
+  "Studio": {
+    "regionLabel": "Interaktiver 3D-Entwicklerarbeitsplatz",
+    "coding": "React-Entwicklung",
+    "drag": "Ziehen zum Erkunden",
+    "pull": "Ziehen",
+    "fallbackAlt": "Stilisierter Arbeitsplatz mit Entwickler, Monitor, Tastatur, Lebenslauf und Schreibtischlampe"
+  },
+  "A11y": {
+    "externalSuffix": "wird in einem neuen Tab geöffnet"
+  }
+}
