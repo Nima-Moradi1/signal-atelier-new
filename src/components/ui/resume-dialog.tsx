@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { Download, ExternalLink, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, type MouseEvent } from "react";
+import { usePortfolio } from "@/content/use-portfolio";
 
 type ResumeDialogProps = {
   open: boolean;
@@ -11,6 +13,8 @@ type ResumeDialogProps = {
 };
 
 export function ResumeDialog({ open, resumeUrl, onClose }: ResumeDialogProps) {
+  const portfolio = usePortfolio();
+  const t = useTranslations("ResumeDialog");
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -44,22 +48,28 @@ export function ResumeDialog({ open, resumeUrl, onClose }: ResumeDialogProps) {
       <article className="resume-dialog__paper">
         <header className="resume-dialog__header">
           <div>
-            <span>Document · PDF</span>
-            <h2 id="resume-dialog-title">Nima Moradirad — Résumé</h2>
+            <span>{t("label")}</span>
+            <h2 id="resume-dialog-title">{t("title")}</h2>
           </div>
           <button
             type="button"
-            aria-label="Close résumé preview"
+            aria-label={t("close")}
             onClick={() => dialog.current?.close()}
           >
             <X aria-hidden="true" size={19} />
           </button>
         </header>
 
-        <div className="resume-dialog__viewport" tabIndex={0}>
+        <div
+          className="resume-dialog__viewport"
+          tabIndex={0}
+          lang="en"
+          dir="ltr"
+          data-artifact-language="en"
+        >
           <Image
-            src="/assets/nima-moradirad-resume-preview.webp"
-            alt="Nima Moradirad's résumé, covering profile, capabilities, professional experience, selected work, education, and technical toolkit"
+            src={portfolio.identity.resumePreview}
+            alt={t("previewAlt")}
             width={1191}
             height={1684}
             sizes="(max-width: 640px) 92vw, 46rem"
@@ -68,14 +78,14 @@ export function ResumeDialog({ open, resumeUrl, onClose }: ResumeDialogProps) {
         </div>
 
         <footer className="resume-dialog__footer">
-          <p>A concise, one-page overview of experience and selected work.</p>
+          <p>{t("description")}</p>
           <div>
             <a href={resumeUrl} target="_blank" rel="noreferrer">
-              Open full size
+              {t("open")}
               <ExternalLink aria-hidden="true" size={15} />
             </a>
             <a href={resumeUrl} download>
-              Download PDF
+              {t("download")}
               <Download aria-hidden="true" size={15} />
             </a>
           </div>

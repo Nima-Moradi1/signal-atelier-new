@@ -1,9 +1,14 @@
-import { portfolio } from "@/content/portfolio";
+import { useFormatter, useTranslations } from "next-intl";
+import { usePortfolio } from "@/content/use-portfolio";
 import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { CapabilityTimeline } from "@/components/capabilities/capability-timeline";
 
 export function CapabilitiesSection() {
+  const portfolio = usePortfolio();
+  const t = useTranslations("Capabilities");
+  const format = useFormatter();
+
   return (
     <section
       className="section capabilities"
@@ -15,10 +20,13 @@ export function CapabilitiesSection() {
         <Reveal>
           <SectionHeading
             id="capabilities-title"
-            index="04"
-            eyebrow="Engineering capabilities"
-            title="Web to Android."
-            description="Architecture, delivery, quality, and AI-assisted systems for production products."
+            index={format.number(4, {
+              minimumIntegerDigits: 2,
+              useGrouping: false,
+            })}
+            eyebrow={t("eyebrow")}
+            title={t("title")}
+            description={t("description")}
           />
         </Reveal>
       </div>

@@ -7,6 +7,7 @@ import {
   useTransform,
 } from "motion/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
 import {
   useEffect,
   useLayoutEffect,
@@ -17,6 +18,10 @@ import {
   type UIEvent,
 } from "react";
 import type { CapabilityGroup } from "@/types/portfolio";
+import {
+  getLogicalScrollLeft,
+  scrollToLogicalLeft,
+} from "@/lib/logical-scroll";
 
 type Education = {
   title: string;
@@ -34,6 +39,14 @@ export function CapabilityTimeline({
   groups,
   education,
 }: CapabilityTimelineProps) {
+  const locale = useLocale();
+  const isRtl = locale === "fa";
+  const t = useTranslations("Capabilities");
+  const format = useFormatter();
+  const formatIndex = (value: number) =>
+    format.number(value, { minimumIntegerDigits: 2, useGrouping: false });
+  const PreviousIcon = isRtl ? ArrowRight : ArrowLeft;
+  const NextIcon = isRtl ? ArrowLeft : ArrowRight;
   const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
@@ -43,7 +56,7 @@ export function CapabilityTimeline({
   const horizontalDrag = useRef<{
     axis: "horizontal" | "vertical" | null;
     pointerId: number;
-    startScrollLeft: number;
+    startLogicalScrollLeft: number;
     startX: number;
     startY: number;
   } | null>(null);
@@ -55,7 +68,11 @@ export function CapabilityTimeline({
     offset: ["start start", "end end"],
     trackContentSize: true,
   });
-  const x = useTransform(scrollYProgress, [0, 1], [0, -travel]);
+  const x = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, isRtl ? travel : -travel],
+  );
 
   useLayoutEffect(() => {
     const viewportNode = viewport.current;
@@ -87,7 +104,7 @@ export function CapabilityTimeline({
       horizontalDrag.current = {
         axis: null,
         pointerId: event.pointerId,
-        startScrollLeft: activeViewport.scrollLeft,
+        startLogicalScrollLeft: getLogicalScrollLeft(activeViewport, isRtl),
         startX: event.clientX,
         startY: event.clientY,
       };
@@ -114,7 +131,10 @@ export function CapabilityTimeline({
       if (!activeStage.hasPointerCapture(event.pointerId)) {
         activeStage.setPointerCapture(event.pointerId);
       }
-      activeViewport.scrollLeft = drag.startScrollLeft - deltaX;
+      scrollToLogicalLeft(
+        activeViewport,
+        drag.startLogicalScrollLeft + (isRtl ? deltaX : -deltaX),
+      );
     }
 
     function finishPointerDrag(event: globalThis.PointerEvent) {
@@ -142,7 +162,7 @@ export function CapabilityTimeline({
       stageNode.removeEventListener("pointerup", finishPointerDrag, true);
       stageNode.removeEventListener("pointercancel", finishPointerDrag, true);
     };
-  }, [nativeTimeline]);
+  }, [isRtl, nativeTimeline]);
 
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
     if (nativeTimeline) return;
@@ -158,10 +178,9 @@ export function CapabilityTimeline({
     const progress = nextIndex / Math.max(itemCount - 1, 1);
 
     if (nativeTimeline) {
-      viewport.current?.scrollTo({
-        left: progress * travel,
-        behavior: "auto",
-      });
+      if (viewport.current) {
+        scrollToLogicalLeft(viewport.current, progress * travel);
+      }
       setActiveIndex(nextIndex);
       return;
     }
@@ -180,11 +199,18 @@ export function CapabilityTimeline({
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+    const isNextKey =
+      event.key === "ArrowDown" ||
+      (isRtl ? event.key === "ArrowLeft" : event.key === "ArrowRight");
+    const isPreviousKey =
+      event.key === "ArrowUp" ||
+      (isRtl ? event.key === "ArrowRight" : event.key === "ArrowLeft");
+
+    if (isNextKey) {
       event.preventDefault();
       goTo(activeIndex + 1);
     }
-    if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+    if (isPreviousKey) {
       event.preventDefault();
       goTo(activeIndex - 1);
     }
@@ -200,7 +226,7 @@ export function CapabilityTimeline({
 
   function handleNativeScroll(event: UIEvent<HTMLDivElement>) {
     if (!nativeTimeline || travel <= 0) return;
-    const progress = event.currentTarget.scrollLeft / travel;
+    const progress = getLogicalScrollLeft(event.currentTarget, isRtl) / travel;
     const index = Math.min(
       itemCount - 1,
       Math.round(progress * (itemCount - 1)),
@@ -219,6 +245,7 @@ export function CapabilityTimeline({
       ref={root}
       className="capability-timeline"
       data-motion={nativeTimeline ? "native" : "depth-linked"}
+      data-direction={isRtl ? "rtl" : "ltr"}
       data-active-index={activeIndex}
       style={timelineStyle}
     >
@@ -226,7 +253,7 @@ export function CapabilityTimeline({
         ref={stage}
         className="capability-timeline__stage"
         role="region"
-        aria-label="Horizontal engineering capabilities timeline"
+        aria-label={t("regionLabel")}
         tabIndex={0}
         onKeyDown={handleKeyDown}
         onClickCapture={(event) => {
@@ -239,33 +266,34 @@ export function CapabilityTimeline({
       >
         <header className="capability-timeline__chrome page-shell">
           <div>
-            <span>Skills &amp; experience</span>
-            <p>
-              Explore the tools, systems, and product work behind each
-              discipline.
-            </p>
+            <span>{t("chromeTitle")}</span>
+            <p>{t("chromeDescription")}</p>
           </div>
           <div className="capability-timeline__controls">
             <button
               type="button"
               onClick={() => goTo(activeIndex - 1)}
               disabled={activeIndex === 0}
-              aria-label="Previous capability group"
+              aria-label={t("previous")}
             >
-              <ArrowLeft aria-hidden="true" size={17} />
+              <PreviousIcon aria-hidden="true" size={17} />
             </button>
             <p aria-live="polite">
-              <span>{String(activeIndex + 1).padStart(2, "0")}</span>
+              <span>
+                <bdi>{formatIndex(activeIndex + 1)}</bdi>
+              </span>
               <i aria-hidden="true" />
-              <span>{String(itemCount).padStart(2, "0")}</span>
+              <span>
+                <bdi>{formatIndex(itemCount)}</bdi>
+              </span>
             </p>
             <button
               type="button"
               onClick={() => goTo(activeIndex + 1)}
               disabled={activeIndex === itemCount - 1}
-              aria-label="Next capability group"
+              aria-label={t("next")}
             >
-              <ArrowRight aria-hidden="true" size={17} />
+              <NextIcon aria-hidden="true" size={17} />
             </button>
           </div>
         </header>
@@ -274,9 +302,7 @@ export function CapabilityTimeline({
           ref={viewport}
           className="capability-timeline__viewport"
           tabIndex={nativeTimeline ? 0 : undefined}
-          aria-label={
-            nativeTimeline ? "Scrollable engineering capabilities" : undefined
-          }
+          aria-label={nativeTimeline ? t("scrollableLabel") : undefined}
           onScroll={handleNativeScroll}
         >
           <motion.ol
@@ -285,19 +311,23 @@ export function CapabilityTimeline({
             style={nativeTimeline ? undefined : { x }}
           >
             {groups.map((group, index) => (
-              <li key={group.label} className="capability-timeline__item">
+              <li key={group.id} className="capability-timeline__item">
                 <article className="capability-row capability-timeline__card">
                   <div className="capability-timeline__node" aria-hidden="true">
-                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <span>
+                      <bdi>{formatIndex(index + 1)}</bdi>
+                    </span>
                   </div>
                   <div className="capability-timeline__copy">
                     <span>{group.label}</span>
-                    <h3>{group.label.split("·").at(-1)?.trim()}</h3>
+                    <h3>{group.title}</h3>
                     <p>{group.description}</p>
                   </div>
                   <ul>
                     {group.skills.map((skill) => (
-                      <li key={skill}>{skill}</li>
+                      <li key={skill}>
+                        <bdi>{skill}</bdi>
+                      </li>
                     ))}
                   </ul>
                 </article>
@@ -312,13 +342,13 @@ export function CapabilityTimeline({
                   <span />
                 </div>
                 <div>
-                  <span>Education & languages</span>
+                  <span>{t("educationTitle")}</span>
                   <h3>{education.title}</h3>
                   <p>{education.institution}</p>
                 </div>
                 <div className="education-card__details">
                   <p>{education.note}</p>
-                  <ul aria-label="Languages">
+                  <ul aria-label={t("languagesLabel")}>
                     {education.languages.map((language) => (
                       <li key={language}>{language}</li>
                     ))}
@@ -331,13 +361,17 @@ export function CapabilityTimeline({
 
         <nav
           className="capability-timeline__steps"
-          aria-label="Capability groups"
+          aria-label={t("stepsLabel")}
         >
           {Array.from({ length: itemCount }, (_, index) => (
             <button
               key={index}
               type="button"
-              aria-label={`Show ${index === itemCount - 1 ? "education" : `capability group ${index + 1}`}`}
+              aria-label={
+                index === itemCount - 1
+                  ? t("showEducation")
+                  : t("showGroup", { number: formatIndex(index + 1) })
+              }
               aria-current={index === activeIndex ? "step" : undefined}
               onClick={() => goTo(index)}
             >

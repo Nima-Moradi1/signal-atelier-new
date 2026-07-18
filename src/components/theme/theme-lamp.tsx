@@ -1,9 +1,11 @@
 "use client";
 
 import { useRef, type MouseEvent, type PointerEvent } from "react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "@/components/theme/theme-provider";
 
 export function ThemeLamp() {
+  const t = useTranslations("Theme");
   const { isDark, toggleTheme } = useTheme();
   const pullAmountRef = useRef(0);
   const pointerStart = useRef(0);
@@ -65,9 +67,7 @@ export function ThemeLamp() {
     if (event.detail === 0) toggleTheme();
   }
 
-  const actionLabel = isDark
-    ? "Turn the reading lamp off and switch to light mode"
-    : "Turn the reading lamp on and switch to dark mode";
+  const actionLabel = isDark ? t("toLight") : t("toDark");
 
   return (
     <div className="theme-lamp" data-lit={isDark}>
@@ -81,7 +81,7 @@ export function ThemeLamp() {
         type="button"
         aria-label={actionLabel}
         aria-pressed={isDark}
-        title={`${actionLabel}. Pull the chain downward.`}
+        title={t("instruction", { action: actionLabel })}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}

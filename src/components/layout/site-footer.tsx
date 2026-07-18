@@ -1,14 +1,21 @@
-import { portfolio } from "@/content/portfolio";
+import { useFormatter, useTranslations } from "next-intl";
+import { usePortfolio } from "@/content/use-portfolio";
 
 export function SiteFooter() {
+  const portfolio = usePortfolio();
+  const t = useTranslations("Footer");
+  const format = useFormatter();
+  const year = format.number(new Date().getFullYear(), { useGrouping: false });
+
   return (
     <footer className="site-footer">
-      <a href="#top" className="site-footer__mark" aria-label="Back to top">
+      <a href="#top" className="site-footer__mark" aria-label={t("backToTop")}>
         {portfolio.identity.initials}
       </a>
       <p>
-        Designed as a signal system. Engineered for the real web.
-        <br />© {new Date().getFullYear()} {portfolio.identity.name}
+        {t("statement")}
+        <br />
+        {t("copyright", { year, name: portfolio.identity.name })}
       </p>
       <div className="site-footer__links">
         {portfolio.socialLinks.map((link) => (
@@ -22,9 +29,9 @@ export function SiteFooter() {
           </a>
         ))}
         <a href={portfolio.identity.resumeUrl} download>
-          Résumé
+          {t("resume")}
         </a>
-        <a href="#top">Top ↑</a>
+        <a href="#top">{t("top")}</a>
       </div>
     </footer>
   );

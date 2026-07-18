@@ -1,9 +1,16 @@
 import Image from "next/image";
-import { portfolio } from "@/content/portfolio";
+import { useFormatter, useTranslations } from "next-intl";
+import { usePortfolio } from "@/content/use-portfolio";
 import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 export function AboutSection() {
+  const portfolio = usePortfolio();
+  const t = useTranslations("About");
+  const format = useFormatter();
+  const formatIndex = (value: number) =>
+    format.number(value, { minimumIntegerDigits: 2, useGrouping: false });
+
   return (
     <section
       className="section about"
@@ -15,9 +22,9 @@ export function AboutSection() {
         <Reveal>
           <SectionHeading
             id="about-title"
-            index="01"
+            index={formatIndex(1)}
             eyebrow={portfolio.about.eyebrow}
-            title="Human products. Scalable systems."
+            title={t("title")}
           />
         </Reveal>
 
@@ -27,15 +34,15 @@ export function AboutSection() {
               <p>{portfolio.identity.statement}</p>
             </Reveal>
             <div className="about__coordinate" aria-hidden="true">
-              <span>Engineering</span>
+              <span>{t("engineering")}</span>
               <span>×</span>
-              <span>Creativity</span>
+              <span>{t("creativity")}</span>
             </div>
             <Reveal delay={0.08}>
               <figure className="about__portrait">
                 <Image
                   src="/assets/nima-moradirad.jpg"
-                  alt="Portrait of Nima Moradirad"
+                  alt={t("portraitAlt")}
                   width={400}
                   height={400}
                   sizes="(max-width: 768px) 72vw, 28vw"
@@ -56,8 +63,8 @@ export function AboutSection() {
             </Reveal>
             {portfolio.about.principles.map((principle, index) => (
               <Reveal key={principle.index} delay={(index + 1) * 0.06}>
-                <article className="principle-card">
-                  <span>{principle.index}</span>
+                <article className="principle-card" key={principle.id}>
+                  <span>{formatIndex(Number(principle.index))}</span>
                   <h3>{principle.title}</h3>
                   <p>{principle.text}</p>
                 </article>

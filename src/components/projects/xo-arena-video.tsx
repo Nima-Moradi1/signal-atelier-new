@@ -1,9 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { preload } from "react-dom";
 
 export function XoArenaVideo() {
+  const t = useTranslations("XoArena");
+
   preload("/assets/projects/xo-arena/xo-arena-preview.webm", {
     as: "fetch",
     crossOrigin: "anonymous",
@@ -54,7 +57,7 @@ export function XoArenaVideo() {
         preload="auto"
         crossOrigin="anonymous"
         poster="/assets/projects/xo-arena/video-poster.webp"
-        aria-label="XO Arena product walkthrough showing authentication, the multiplayer lobby, game rooms, computer opponents, and profile history"
+        aria-label={t("video.ariaLabel")}
         onCanPlay={() => setReady(true)}
         onLoadedData={() => setReady(true)}
         onProgress={updateBuffered}
@@ -71,15 +74,17 @@ export function XoArenaVideo() {
 
       <div className="xo-video__loading" aria-hidden="true">
         <span />
-        <p>Buffering product walkthrough</p>
+        <p>{t("video.buffering")}</p>
         <div>
           <i style={{ width: `${buffered}%` }} />
         </div>
       </div>
 
       <div className="xo-video__chrome" aria-hidden="true">
-        <span>Product capture · 23 sec</span>
-        <span>1166 × 720</span>
+        <span>{t("video.capture")}</span>
+        <span>
+          <bdi dir="ltr">{t("video.dimensions")}</bdi>
+        </span>
       </div>
     </div>
   );

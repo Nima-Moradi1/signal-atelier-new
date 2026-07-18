@@ -1,11 +1,20 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { portfolio } from "@/content/portfolio";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { useFormatter, useLocale, useTranslations } from "next-intl";
+import { usePortfolio } from "@/content/use-portfolio";
+import { Link } from "@/i18n/navigation";
 import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 export function ProjectsSection() {
+  const locale = useLocale();
+  const portfolio = usePortfolio();
+  const t = useTranslations("Projects");
+  const format = useFormatter();
+  const formatIndex = (value: number) =>
+    format.number(value, { minimumIntegerDigits: 2, useGrouping: false });
+  const InternalArrow = locale === "fa" ? ArrowLeft : ArrowRight;
+
   return (
     <section
       className="section projects"
@@ -17,10 +26,10 @@ export function ProjectsSection() {
         <Reveal className="projects__header-frame">
           <SectionHeading
             id="work-title"
-            index="03"
-            eyebrow="Selected work"
-            title="Work that ships."
-            description="Three production-minded products across multiplayer, commerce, and B2B finance."
+            index={formatIndex(3)}
+            eyebrow={t("eyebrow")}
+            title={t("title")}
+            description={t("description")}
           />
         </Reveal>
 
@@ -39,13 +48,15 @@ export function ProjectsSection() {
                     fill
                     sizes="(max-width: 864px) 100vw, 33vw"
                   />
-                  <span aria-hidden="true">{project.number}</span>
+                  <span aria-hidden="true">
+                    {formatIndex(Number(project.number))}
+                  </span>
                 </div>
                 <div className="project-card__content">
                   <div className="project-card__kicker">
                     <span>{project.category}</span>
                     {project.href?.startsWith("/") ? (
-                      <ArrowRight aria-hidden="true" size={19} />
+                      <InternalArrow aria-hidden="true" size={19} />
                     ) : (
                       <ArrowUpRight aria-hidden="true" size={19} />
                     )}
@@ -54,7 +65,9 @@ export function ProjectsSection() {
                   <p>{project.summary}</p>
                   <div className="tag-list">
                     {project.technologies.slice(0, 4).map((technology) => (
-                      <span key={technology}>{technology}</span>
+                      <span key={technology}>
+                        <bdi>{technology}</bdi>
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -62,12 +75,12 @@ export function ProjectsSection() {
             );
 
             return (
-              <Reveal key={project.number} delay={index * 0.08}>
+              <Reveal key={project.id} delay={index * 0.08}>
                 {project.href?.startsWith("/") ? (
                   <Link
                     className="project-card__link"
                     href={project.href}
-                    aria-label={`View the ${project.title} case study`}
+                    aria-label={t("internalLabel", { title: project.title })}
                   >
                     {content}
                   </Link>
@@ -77,7 +90,7 @@ export function ProjectsSection() {
                     href={project.href}
                     target="_blank"
                     rel="noreferrer noopener"
-                    aria-label={`View ${project.title} project in a new tab`}
+                    aria-label={t("externalLabel", { title: project.title })}
                   >
                     {content}
                   </a>

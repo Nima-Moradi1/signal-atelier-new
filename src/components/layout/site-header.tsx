@@ -1,12 +1,17 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import Link from "next/link";
+import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { LocaleSwitcher } from "@/components/i18n/locale-switcher";
 import { ThemeLamp } from "@/components/theme/theme-lamp";
-import { portfolio } from "@/content/portfolio";
+import { usePortfolio } from "@/content/use-portfolio";
+import { Link } from "@/i18n/navigation";
 
 export function SiteHeader() {
+  const portfolio = usePortfolio();
+  const t = useTranslations("Navigation");
+  const format = useFormatter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -51,7 +56,7 @@ export function SiteHeader() {
         <Link
           className="site-header__brand"
           href="/"
-          aria-label="Go to top"
+          aria-label={t("goTop")}
           onClick={() => setMenuOpen(false)}
         >
           <span className="site-header__mark" aria-hidden="true">
@@ -65,7 +70,7 @@ export function SiteHeader() {
 
         <nav
           className="site-header__desktop-nav"
-          aria-label="Primary navigation"
+          aria-label={t("primaryLabel")}
         >
           {portfolio.navigation.map((item) => (
             <Link href={item.href} key={item.href}>
@@ -76,15 +81,16 @@ export function SiteHeader() {
 
         <div className="site-header__actions">
           <Link className="site-header__contact" href="/#contact">
-            Start a conversation
+            {t("contactCta")}
           </Link>
+          <LocaleSwitcher />
           <ThemeLamp />
           <button
             className="site-header__menu-button"
             type="button"
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
-            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+            aria-label={menuOpen ? t("close") : t("open")}
             onClick={() => setMenuOpen((current) => !current)}
           >
             {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
@@ -98,7 +104,7 @@ export function SiteHeader() {
         data-open={menuOpen}
         aria-hidden={!menuOpen}
       >
-        <nav aria-label="Mobile navigation">
+        <nav aria-label={t("mobileLabel")}>
           {portfolio.navigation.map((item, index) => (
             <Link
               href={item.href}
@@ -106,7 +112,12 @@ export function SiteHeader() {
               tabIndex={menuOpen ? 0 : -1}
               onClick={() => setMenuOpen(false)}
             >
-              <span>0{index + 1}</span>
+              <bdi>
+                {format.number(index + 1, {
+                  minimumIntegerDigits: 2,
+                  useGrouping: false,
+                })}
+              </bdi>
               {item.label}
             </Link>
           ))}

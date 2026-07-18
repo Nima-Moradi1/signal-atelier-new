@@ -2,10 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowUpRight, LoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { contactSchema, type ContactFormValues } from "@/lib/contact-schema";
-import { portfolio } from "@/content/portfolio";
+import {
+  createContactSchema,
+  type ContactFormValues,
+} from "@/lib/contact-schema";
+import { usePortfolio } from "@/content/use-portfolio";
 
 type SubmitState =
   | { kind: "idle" }
@@ -13,6 +17,21 @@ type SubmitState =
   | { kind: "error"; message: string; mailto?: string };
 
 export function ContactForm() {
+  const locale = useLocale();
+  const portfolio = usePortfolio();
+  const t = useTranslations("ContactForm");
+  const contactSchema = useMemo(
+    () =>
+      createContactSchema({
+        nameMin: t("validation.nameMin"),
+        nameMax: t("validation.nameMax"),
+        email: t("validation.email"),
+        messageMin: t("validation.messageMin"),
+        messageMax: t("validation.messageMax"),
+        company: t("validation.company"),
+      }),
+    [t],
+  );
   const [submitState, setSubmitState] = useState<SubmitState>({ kind: "idle" });
   const {
     register,
@@ -29,7 +48,10 @@ export function ContactForm() {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-portfolio-locale": locale,
+        },
         body: JSON.stringify(values),
       });
       const result = (await response.json()) as {
@@ -40,9 +62,7 @@ export function ContactForm() {
       if (!response.ok) {
         setSubmitState({
           kind: "error",
-          message:
-            result.message ??
-            "The message could not be sent. Please use email instead.",
+          message: result.message ?? t("fallbackError"),
           mailto: result.mailto,
         });
         return;
@@ -50,13 +70,13 @@ export function ContactForm() {
 
       setSubmitState({
         kind: "success",
-        message: result.message ?? "Message received. Thank you.",
+        message: result.message ?? t("fallbackSuccess"),
       });
       reset();
     } catch {
       setSubmitState({
         kind: "error",
-        message: "The connection failed. Please use the email link instead.",
+        message: t("connectionError"),
         mailto: `mailto:${portfolio.identity.email}`,
       });
     }
@@ -65,13 +85,14 @@ export function ContactForm() {
   return (
     <form className="contact-form" onSubmit={handleSubmit(onSubmit)} noValidate>
       <div className="contact-form__field">
-        <label htmlFor="name">Your name</label>
+        <label htmlFor="name">{t("fields.name")}</label>
         <input
           id="name"
           autoComplete="name"
           aria-invalid={Boolean(errors.name)}
           aria-describedby={errors.name ? "name-error" : undefined}
-          placeholder="How should I address you?"
+          placeholder={t("fields.namePlaceholder")}
+          dir="auto"
           {...register("name")}
         />
         {errors.name ? (
@@ -82,7 +103,7 @@ export function ContactForm() {
       </div>
 
       <div className="contact-form__field">
-        <label htmlFor="email">Email address</label>
+        <label htmlFor="email">{t("fields.email")}</label>
         <input
           id="email"
           type="email"
@@ -90,7 +111,8 @@ export function ContactForm() {
           autoComplete="email"
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? "email-error" : undefined}
-          placeholder="you@company.com"
+          placeholder={t("fields.emailPlaceholder")}
+          dir="ltr"
           {...register("email")}
         />
         {errors.email ? (
@@ -101,13 +123,14 @@ export function ContactForm() {
       </div>
 
       <div className="contact-form__field contact-form__field--full">
-        <label htmlFor="message">What are you building?</label>
+        <label htmlFor="message">{t("fields.message")}</label>
         <textarea
           id="message"
           rows={5}
           aria-invalid={Boolean(errors.message)}
           aria-describedby={errors.message ? "message-error" : undefined}
-          placeholder="A little context, the challenge, and where you need help…"
+          placeholder={t("fields.messagePlaceholder")}
+          dir="auto"
           {...register("message")}
         />
         {errors.message ? (
@@ -118,7 +141,7 @@ export function ContactForm() {
       </div>
 
       <div className="contact-form__honeypot" aria-hidden="true">
-        <label htmlFor="company">Company</label>
+        <label htmlFor="company">{t("fields.company")}</label>
         <input
           id="company"
           tabIndex={-1}
@@ -132,19 +155,19 @@ export function ContactForm() {
           {isSubmitting ? (
             <>
               <LoaderCircle className="spin" aria-hidden="true" />
-              Transmitting…
+              {t("submitting")}
             </>
           ) : (
             <>
-              Send the signal
-              <ArrowUpRight aria-hidden="true" />
+              {t("submit")}
+              <ArrowUpRight className="icon-directional" aria-hidden="true" />
             </>
           )}
         </button>
         <p>
-          Prefer email?{" "}
+          {t("preferEmail")}{" "}
           <a href={`mailto:${portfolio.identity.email}`}>
-            {portfolio.identity.email}
+            <bdi>{portfolio.identity.email}</bdi>
           </a>
         </p>
       </div>
@@ -154,7 +177,7 @@ export function ContactForm() {
           <p data-kind={submitState.kind}>
             {submitState.message}{" "}
             {submitState.kind === "error" && submitState.mailto ? (
-              <a href={submitState.mailto}>Open your email app.</a>
+              <a href={submitState.mailto}>{t("openEmail")}</a>
             ) : null}
           </p>
         ) : null}

@@ -3,6 +3,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
 
 type MagneticLinkProps = {
@@ -22,6 +23,7 @@ export function MagneticLink({
 }: MagneticLinkProps) {
   const ref = useRef<HTMLAnchorElement>(null);
   const reduceMotion = useReducedMotion();
+  const t = useTranslations("A11y");
 
   function handlePointerMove(event: React.PointerEvent<HTMLAnchorElement>) {
     if (reduceMotion || event.pointerType === "touch") return;
@@ -48,11 +50,16 @@ export function MagneticLink({
       target={external ? "_blank" : undefined}
       rel={external ? "noreferrer noopener" : undefined}
       aria-label={
-        external ? `${String(children)} (opens in a new tab)` : undefined
+        external ? `${String(children)} (${t("externalSuffix")})` : undefined
       }
     >
       <span>{children}</span>
-      <ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.7} />
+      <ArrowUpRight
+        className="icon-directional"
+        aria-hidden="true"
+        size={17}
+        strokeWidth={1.7}
+      />
     </motion.a>
   );
 }
