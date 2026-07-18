@@ -23,9 +23,9 @@ export async function createManifest(
     theme_color: "#b8ff45",
     icons: [
       {
-        src: "/icon",
-        sizes: "512x512",
-        type: "image/png",
+        src: "/favicon.svg",
+        sizes: "any",
+        type: "image/svg+xml",
       },
     ],
   };

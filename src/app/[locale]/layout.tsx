@@ -105,6 +105,11 @@ export async function generateMetadata({
       description: t("homeOgDescription"),
     },
     manifest: getLocalizedPath(locale, "/manifest.webmanifest"),
+    icons: {
+      icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+      shortcut: "/favicon.svg",
+      apple: "/assets/nima-moradirad.jpg",
+    },
     robots: {
       index: true,
       follow: true,
