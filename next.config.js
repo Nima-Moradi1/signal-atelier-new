@@ -1,8 +1,13 @@
-import type { NextConfig } from "next";
-import bundleAnalyzer from "@next/bundle-analyzer";
-import createNextIntlPlugin from "next-intl/plugin";
+/* eslint-disable @typescript-eslint/no-require-imports */
+const bundleAnalyzer = require("@next/bundle-analyzer");
+const createNextIntlPlugin = require("next-intl/plugin");
 
-const nextConfig: NextConfig = {
+/** @type {import("next").NextConfig} */
+const nextConfig = {
+  // Liara's Next.js image expects a standalone server. Keeping this in the
+  // repository prevents its build script from generating a next.config.js
+  // that would shadow the next-intl plugin configuration.
+  output: "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
   compress: true,
@@ -34,4 +39,4 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-export default withBundleAnalyzer(withNextIntl(nextConfig));
+module.exports = withBundleAnalyzer(withNextIntl(nextConfig));

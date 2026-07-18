@@ -202,7 +202,7 @@ If contact delivery is required, also add the three server-only Resend values be
 - Payload size, a honeypot, and best-effort in-memory rate limiting provide a lightweight first layer.
 - No analytics or trackers are installed.
 - External links use safe `rel` attributes.
-- Security headers are configured in `next.config.ts`.
+- Security headers are configured in `next.config.js`.
 
 For high-volume production use, replace the in-memory rate limiter with a durable distributed service and add a managed bot challenge.
 
