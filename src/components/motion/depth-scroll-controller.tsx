@@ -55,14 +55,18 @@ export function DepthScrollController() {
         }
 
         const entrance = clamp((viewportHeight - bounds.top) / travel);
-        const exit = clamp((viewportHeight - bounds.bottom) / travel);
+        const exitThreshold = Math.min(viewportHeight, bounds.height);
+        const exit = clamp((exitThreshold - bounds.bottom) / travel);
         const entranceDepth = 1 - entrance;
         const opacity = Math.max(0.035, Math.min(entrance, 1 - exit));
-        const scale = 0.74 + entrance * 0.26 + exit * 0.16;
-        const translateZ = entranceDepth * -320 + exit * 190;
-        const translateY = entranceDepth * 54 - exit * 34;
-        const rotateX = entranceDepth * 3.2 - exit * 1.8;
-        const blur = entranceDepth * 8 + exit * 8;
+        // Keep the perspective treatment inside the section's own geometry.
+        // Positive Z and a scale above 1 used to expand an exiting page-shell
+        // beyond the viewport, which was especially visible as RTL side drift.
+        const scale = 0.96 + entrance * 0.04;
+        const translateZ = entranceDepth * -96;
+        const translateY = entranceDepth * 24 - exit * 12;
+        const rotateX = entranceDepth * 1.4;
+        const blur = entranceDepth * 4 + exit * 3;
 
         section.style.setProperty("--depth-opacity", opacity.toFixed(4));
         section.style.setProperty("--depth-scale", scale.toFixed(4));
