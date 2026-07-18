@@ -21,7 +21,7 @@ export function SectionHeading({
         <span className={styles.index} aria-hidden="true">
           {index}
         </span>
-        <p>{eyebrow}</p>
+        <p className="text-lg">{eyebrow}</p>
       </div>
       <div className={styles.copy}>
         <h2 className={styles.title} id={id}>
