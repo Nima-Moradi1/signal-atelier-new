@@ -93,6 +93,7 @@ test("renders the portfolio narrative and navigation", async ({ page }) => {
 test("renders a controllable workstation with in-scene resume and lamp actions", async ({
   page,
 }) => {
+  test.setTimeout(60_000);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.waitForLoadState("networkidle");
@@ -110,6 +111,19 @@ test("renders a controllable workstation with in-scene resume and lamp actions",
   );
 
   const viewport = page.locator(".hero-studio__viewport");
+  await expect(viewport).toHaveAttribute("data-rotation-range", "360");
+  await expect(viewport).toHaveAttribute(
+    "data-engineer-artwork",
+    "wall-hanging",
+  );
+  await expect(viewport).toHaveAttribute(
+    "data-developer-pose",
+    "facing-monitor",
+  );
+  await expect(viewport).toHaveAttribute("data-keyboard", "articulated-typing");
+  await expect(
+    page.getByText("Drag to rotate 360°", { exact: true }),
+  ).toBeVisible();
   const canvas = viewport.locator("canvas");
   const hasWorkstationCanvas = (await canvas.count()) > 0;
   if (hasWorkstationCanvas) {

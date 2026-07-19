@@ -201,7 +201,7 @@
   "Studio": {
     "regionLabel": "Interactive 3D developer workstation",
     "coding": "React Coding",
-    "drag": "Drag to inspect",
+    "drag": "Drag to rotate 360°",
     "pull": "Pull",
     "fallbackAlt": "Stylized workstation with a developer, monitor, keyboard, résumé, and desk lamp"
   },

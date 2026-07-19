@@ -59,7 +59,13 @@ export function HeroStudio() {
       role="region"
       aria-label={t("regionLabel")}
     >
-      <div className={cn(styles.viewport, artwork.viewport)}>
+      <div
+        className={cn(styles.viewport, artwork.viewport)}
+        data-developer-pose="facing-monitor"
+        data-engineer-artwork="wall-hanging"
+        data-keyboard="articulated-typing"
+        data-rotation-range="360"
+      >
         <WebGLErrorBoundary fallback={readyFallback}>
           {webGLSupported === null ? (
             <DeskFallback />

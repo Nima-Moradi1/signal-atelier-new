@@ -201,7 +201,7 @@
   "Studio": {
     "regionLabel": "Interaktiver 3D-Entwicklerarbeitsplatz",
     "coding": "React-Entwicklung",
-    "drag": "Ziehen zum Erkunden",
+    "drag": "Ziehen für 360°-Drehung",
     "pull": "Ziehen",
     "fallbackAlt": "Stilisierter Arbeitsplatz mit Entwickler, Monitor, Tastatur, Lebenslauf und Schreibtischlampe"
   },

@@ -30,6 +30,17 @@ describe("optimized portfolio assets", () => {
     );
   });
 
+  it("ships one compact senior-engineer painting texture", () => {
+    expect(
+      size("assets/hero/senior-engineer-systems-painting.webp"),
+    ).toBeLessThan(250_000);
+    expect(
+      existsSync(
+        resolve(root, "assets/hero/senior-engineer-systems-painting.png"),
+      ),
+    ).toBe(false);
+  });
+
   it("includes one optimized résumé preview and a one-page source PDF", () => {
     expect(size("assets/nima-moradirad-resume-preview.webp")).toBeLessThan(
       300_000,

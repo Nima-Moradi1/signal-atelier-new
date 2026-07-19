@@ -2,7 +2,11 @@
 
 ## Original project assets
 
-The signal sculpture, interface composition, gradients, icon, and Open Graph artwork are generated from source code and CSS in this repository. They do not embed third-party models, textures, video, or audio.
+The signal sculpture, interface composition, gradients, icon, and Open Graph artwork are generated from source code and CSS in this repository. The 3D workstation uses procedural geometry and the original generated painting documented below; it does not embed third-party models, video, or audio.
+
+## Generated assets
+
+- `public/assets/hero/senior-engineer-systems-painting.webp` — original mixed-media systems-architecture artwork generated for this portfolio with OpenAI's built-in image-generation tool on July 19, 2026. It was prompted without third-party logos, readable text, or stock imagery, then locally resized and encoded as WebP. The exact “Senior Software Engineer” title is rendered separately by the application for clarity.
 
 ## Fonts
 

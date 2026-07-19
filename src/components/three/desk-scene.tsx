@@ -7,6 +7,7 @@ import {
   PresentationControls,
   RoundedBox,
   useCursor,
+  useTexture,
 } from "@react-three/drei";
 import {
   Canvas,
@@ -22,36 +23,67 @@ import { cn } from "@/lib/cn";
 import { deskSceneClassNames as styles } from "./desk-scene.class-names";
 import artwork from "./desk-scene.module.css";
 
-const EDITOR_CODE = `type SignalProps = {
-  accountId: string;
-};
-
-export function SignalDashboard({ accountId }: SignalProps) {
-  const { data, isPending } = useQuery({
-    queryKey: ["signal", accountId],
-    queryFn: () => getSignal(accountId),
-    staleTime: 30_000,
-  });
-
-  const metrics = useMemo(
-    () => normalizeSignal(data),
-    [data],
+const EDITOR_CODE = `import {
+  memo, useCallback,
+  useMemo, useTransition,
+} from "react";
+const MetricCard = memo(function MetricCard({ metric }: CardProps) {
+  return <Metric value={metric.value} trend={metric.trend} />;
+});
+export function PerformanceDashboard({ signals }: DashboardProps) {
+  const [isPending, startTransition] = useTransition();
+  const visibleSignals = useMemo(
+    () => signals.filter(isActionable).slice(0, 6),
+    [signals],
   );
-
-  if (isPending) return <DashboardSkeleton />;
-
-  return <MetricGrid metrics={metrics} />;
+  const selectSignal = useCallback((id: string) => {
+    startTransition(() => setSelectedSignal(id));
+  }, []);
+  return <MetricGrid busy={isPending} signals={visibleSignals}
+    onSelect={selectSignal} />;
 }`;
 
-const KEY_POSITIONS = Array.from({ length: 60 }, (_, index) => {
-  const row = Math.floor(index / 12);
-  const column = index % 12;
-  return [
-    (column - 5.5) * 0.205 + (row % 2) * 0.04,
-    0.055,
-    (row - 2) * 0.19,
-  ] as const;
+const KEY_UNIT = 0.142;
+const KEY_GAP = 0.027;
+const KEY_ROWS = [
+  Array.from({ length: 14 }, () => 1),
+  [1.35, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.65],
+  [1.65, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2.35],
+  [2.05, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2.95],
+  [1.25, 1.25, 1.25, 6.1, 1.25, 1.25, 1.25],
+] as const;
+const KEY_LABEL_ROWS = [
+  ["esc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "−", "=", "⌫"],
+  ["tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]"],
+  ["caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "enter"],
+  ["shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "shift"],
+  ["ctrl", "opt", "cmd", "space", "cmd", "opt", "← →"],
+] as const;
+
+const KEY_LAYOUT = KEY_ROWS.flatMap((row, rowIndex) => {
+  const totalWidth =
+    row.reduce<number>((total, units) => total + units * KEY_UNIT, 0) +
+    (row.length - 1) * KEY_GAP;
+  let cursor = -totalWidth / 2;
+
+  return row.map((units, keyIndex) => {
+    const width = units * KEY_UNIT;
+    const key = {
+      position: [cursor + width / 2, 0.145, (rowIndex - 2) * 0.19] as const,
+      scale: [width, 0.095, 0.145] as const,
+      accent: rowIndex === 4 && keyIndex === 3,
+      label: KEY_LABEL_ROWS[rowIndex][keyIndex],
+      typingPhase:
+        rowIndex >= 1 && rowIndex <= 3 && keyIndex >= 2 && keyIndex <= 9
+          ? rowIndex * 0.73 + keyIndex * 1.17
+          : null,
+    };
+    cursor += width + KEY_GAP;
+    return key;
+  });
 });
+
+const PAINTING_URL = "/assets/hero/senior-engineer-systems-painting.webp";
 
 type DeskSceneProps = {
   active: boolean;
@@ -100,6 +132,41 @@ function getPalette(theme: Theme): Palette {
   };
 }
 
+function paintCodeLine(
+  context: CanvasRenderingContext2D,
+  line: string,
+  x: number,
+  y: number,
+  isLight: boolean,
+) {
+  const tokens = line.split(
+    /(\b(?:import|from|const|function|return|export|true|false)\b|\b(?:memo|useMemo|useCallback|useTransition|startTransition)\b|"[^"]*"|<\/?[A-Z][A-Za-z]*|\b(?:string|Props)\b)/g,
+  );
+  let cursor = x;
+
+  tokens.forEach((token) => {
+    if (!token) return;
+    context.fillStyle =
+      /^(import|from|const|function|return|export|true|false)$/.test(token)
+        ? "#ff9b8b"
+        : /^(memo|useMemo|useCallback|useTransition|startTransition)$/.test(
+              token,
+            )
+          ? "#d7ff83"
+          : token.startsWith('"')
+            ? "#f4c86a"
+            : token.startsWith("<")
+              ? "#a98cff"
+              : /^(string|Props)$/.test(token)
+                ? "#7ed8ce"
+                : isLight
+                  ? "#e4e9e1"
+                  : "#eef4eb";
+    context.fillText(token, cursor, y);
+    cursor += context.measureText(token).width;
+  });
+}
+
 function paintEditor(
   context: CanvasRenderingContext2D,
   visibleCharacters: number,
@@ -116,79 +183,258 @@ function paintEditor(
   context.fillRect(0, 0, width, height);
 
   context.fillStyle = isLight ? "#30372f" : "#171d18";
-  context.fillRect(0, 0, width, 58);
+  context.fillRect(0, 0, width, 68);
   context.fillStyle = "#ff7e67";
   context.beginPath();
-  context.arc(30, 29, 8, 0, Math.PI * 2);
+  context.arc(32, 34, 8, 0, Math.PI * 2);
   context.fill();
   context.fillStyle = "#e9bf55";
   context.beginPath();
-  context.arc(56, 29, 8, 0, Math.PI * 2);
+  context.arc(58, 34, 8, 0, Math.PI * 2);
   context.fill();
   context.fillStyle = "#b8ff45";
   context.beginPath();
-  context.arc(82, 29, 8, 0, Math.PI * 2);
+  context.arc(84, 34, 8, 0, Math.PI * 2);
   context.fill();
 
   context.fillStyle = isLight ? "#4d7a12" : "#b8ff45";
-  context.font = "600 18px ui-monospace, SFMono-Regular, Menlo, monospace";
-  context.fillText("app/dashboard.tsx", 124, 36);
+  context.font = "700 21px ui-monospace, SFMono-Regular, Menlo, monospace";
+  context.fillText("REACT 19 · PERFORMANCE", 124, 41);
+  context.fillStyle = isLight ? "#a8b0a5" : "#97a395";
+  context.font = "500 17px ui-monospace, SFMono-Regular, Menlo, monospace";
+  context.fillText("PerformanceDashboard.tsx", width - 330, 41);
 
   context.fillStyle = isLight ? "#232a23" : "#111612";
-  context.fillRect(0, 58, 64, height - 82);
+  context.fillRect(0, 68, 72, height - 100);
   context.fillStyle = isLight ? "#697168" : "#899287";
-  context.font = "20px ui-monospace, SFMono-Regular, Menlo, monospace";
+  context.font = "22px ui-monospace, SFMono-Regular, Menlo, monospace";
   ["◇", "⌘", "⑂", "⚙"].forEach((icon, index) => {
-    context.fillText(icon, 20, 112 + index * 58);
+    context.fillText(icon, 23, 122 + index * 62);
   });
 
-  context.font = "20px ui-monospace, SFMono-Regular, Menlo, monospace";
-  const lineHeight = 28;
-  const top = 94;
-  lines.slice(0, 18).forEach((line, index) => {
+  context.font = "32px ui-monospace, SFMono-Regular, Menlo, monospace";
+  const lineHeight = 33;
+  const top = 100;
+  lines.slice(0, 19).forEach((line, index) => {
     const y = top + index * lineHeight;
     context.fillStyle = isLight ? "#697168" : "#667066";
-    context.fillText(String(index + 1).padStart(2, "0"), 78, y);
-
-    const trimmed = line.trim();
-    context.fillStyle =
-      trimmed.startsWith("type") ||
-      trimmed.startsWith("export") ||
-      trimmed.startsWith("return") ||
-      trimmed.startsWith("if")
-        ? "#ff9b8b"
-        : trimmed.startsWith("const")
-          ? "#a98cff"
-          : trimmed.includes("queryKey") || trimmed.includes("staleTime")
-            ? "#ddff9f"
-            : "#dce4d9";
-    context.fillText(line, 122, y);
+    context.fillText(String(index + 1).padStart(2, "0"), 84, y);
+    paintCodeLine(context, line, 136, y, isLight);
   });
 
   const lastLine = lines.at(-1) ?? "";
-  const cursorLine = Math.min(lines.length - 1, 17);
-  const cursorX = 122 + context.measureText(lastLine).width + 2;
-  const cursorY = top + cursorLine * lineHeight - 19;
+  const cursorLine = Math.min(lines.length - 1, 18);
+  const cursorX = 136 + context.measureText(lastLine).width + 2;
+  const cursorY = top + cursorLine * lineHeight - 21;
   context.fillStyle = "#b8ff45";
-  context.fillRect(cursorX, cursorY, 3, 23);
+  context.fillRect(cursorX, cursorY, 3, 25);
 
   context.fillStyle = isLight ? "#4d7a12" : "#315b08";
-  context.fillRect(0, height - 24, width, 24);
+  context.fillRect(0, height - 32, width, 32);
   context.fillStyle = "#eef6e8";
-  context.font = "14px ui-monospace, SFMono-Regular, Menlo, monospace";
-  context.fillText("main*   TypeScript React   UTF-8", 18, height - 7);
+  context.font = "600 17px ui-monospace, SFMono-Regular, Menlo, monospace";
+  context.fillText(
+    "memo ✓   useMemo ✓   useCallback ✓   transition ✓",
+    20,
+    height - 10,
+  );
 }
 
 function createEditorTexture() {
   const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 640;
+  canvas.width = 1280;
+  canvas.height = 768;
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.minFilter = THREE.LinearFilter;
   texture.magFilter = THREE.LinearFilter;
   texture.generateMipmaps = false;
   return texture;
+}
+
+function createArtworkPlaqueTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 180;
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  return texture;
+}
+
+function createKeyboardLegendTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 420;
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  return texture;
+}
+
+function paintKeyboardLegends(texture: THREE.CanvasTexture, color: string) {
+  const context = texture.image.getContext("2d");
+  if (!context) return;
+
+  context.clearRect(0, 0, 1024, 420);
+  context.fillStyle = color;
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+
+  KEY_LAYOUT.forEach((key) => {
+    const x = ((key.position[0] + 1.25) / 2.5) * 1024;
+    const y = ((key.position[2] + 0.51) / 1.02) * 420;
+    const label = key.label === "space" ? "—" : key.label;
+    context.font = `${label.length > 2 ? 600 : 700} ${
+      label.length > 3 ? 18 : label.length > 1 ? 23 : 30
+    }px ui-sans-serif, system-ui, sans-serif`;
+    context.fillText(label, x, y);
+  });
+
+  texture.needsUpdate = true;
+}
+
+function paintArtworkPlaque(texture: THREE.CanvasTexture, theme: Theme) {
+  const context = texture.image.getContext("2d");
+  if (!context) return;
+  const isLight = theme === "light";
+
+  context.clearRect(0, 0, 1024, 180);
+  context.fillStyle = isLight ? "#f4f0e4" : "#101410";
+  context.fillRect(0, 0, 1024, 180);
+  context.fillStyle = isLight ? "#4d7a12" : "#b8ff45";
+  context.fillRect(0, 0, 18, 180);
+  context.fillStyle = isLight ? "#161b16" : "#f1f4ec";
+  context.font = "700 48px ui-sans-serif, system-ui, sans-serif";
+  context.fillText("SENIOR SOFTWARE ENGINEER", 58, 78);
+  context.fillStyle = isLight ? "#526052" : "#aeb9ac";
+  context.font = "600 24px ui-monospace, SFMono-Regular, Menlo, monospace";
+  context.fillText("SYSTEMS · PERFORMANCE · PRODUCT ENGINEERING", 60, 128);
+  texture.needsUpdate = true;
+}
+
+function EngineerGalleryWall({
+  palette,
+  theme,
+}: {
+  palette: Palette;
+  theme: Theme;
+}) {
+  const sourcePainting = useTexture(PAINTING_URL);
+  const maxAnisotropy = useThree((state) =>
+    state.gl.capabilities.getMaxAnisotropy(),
+  );
+  const painting = useMemo(() => {
+    const texture = sourcePainting.clone();
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = Math.min(maxAnisotropy, 8);
+    texture.needsUpdate = true;
+    return texture;
+  }, [maxAnisotropy, sourcePainting]);
+  const [plaque] = useState(createArtworkPlaqueTexture);
+
+  useEffect(() => {
+    paintArtworkPlaque(plaque, theme);
+  }, [plaque, theme]);
+
+  useEffect(() => () => painting.dispose(), [painting]);
+  useEffect(() => () => plaque.dispose(), [plaque]);
+
+  return (
+    <group position={[-4.05, 0.34, -0.72]} rotation={[0, Math.PI / 2, 0]}>
+      <RoundedBox args={[4.5, 4.36, 0.16]} radius={0.08} smoothness={3}>
+        <meshStandardMaterial
+          color={palette.paper}
+          metalness={0.04}
+          roughness={0.94}
+        />
+      </RoundedBox>
+
+      {[-1.5, 0, 1.5].map((x) => (
+        <mesh key={x} position={[x, 0, 0.086]}>
+          <boxGeometry args={[0.018, 4.1, 0.01]} />
+          <meshStandardMaterial
+            color={palette.ink}
+            transparent
+            opacity={0.08}
+            roughness={1}
+          />
+        </mesh>
+      ))}
+
+      <group position={[0, 0.48, 0.13]}>
+        <CylinderBetween
+          start={[-1.42, 1.12, 0]}
+          end={[0, 1.62, 0]}
+          radius={0.018}
+          color={palette.surface}
+        />
+        <CylinderBetween
+          start={[1.42, 1.12, 0]}
+          end={[0, 1.62, 0]}
+          radius={0.018}
+          color={palette.surface}
+        />
+        <mesh position={[0, 1.65, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.065, 0.065, 0.055, 18]} />
+          <meshStandardMaterial
+            color={palette.signal}
+            metalness={0.58}
+            roughness={0.3}
+          />
+        </mesh>
+
+        <RoundedBox
+          args={[3.52, 2.36, 0.16]}
+          radius={0.045}
+          smoothness={3}
+          position={[0, 0, 0.035]}
+        >
+          <meshStandardMaterial
+            color={palette.surface}
+            metalness={0.48}
+            roughness={0.3}
+          />
+        </RoundedBox>
+        <mesh position={[0, 0, 0.126]}>
+          <planeGeometry args={[3.2, 2.04]} />
+          <meshBasicMaterial map={painting} toneMapped={false} />
+        </mesh>
+
+        <RoundedBox
+          args={[2.84, 0.46, 0.08]}
+          radius={0.045}
+          smoothness={3}
+          position={[0, -1.45, 0.04]}
+        >
+          <meshStandardMaterial
+            color={palette.surface}
+            metalness={0.4}
+            roughness={0.34}
+          />
+        </RoundedBox>
+        <mesh position={[0, -1.45, 0.086]}>
+          <planeGeometry args={[2.68, 0.32]} />
+          <meshBasicMaterial map={plaque} toneMapped={false} />
+        </mesh>
+      </group>
+
+      {[-2.06, 2.06].map((x) => (
+        <mesh key={x} position={[x, -1.86, 0.04]}>
+          <boxGeometry args={[0.14, 0.48, 0.34]} />
+          <meshStandardMaterial
+            color={palette.surface}
+            metalness={0.3}
+            roughness={0.48}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
 }
 
 function ResponsiveCamera() {
@@ -200,8 +446,8 @@ function ResponsiveCamera() {
     const node = camera.current;
     if (!node) return;
     const position: [number, number, number] = compact
-      ? [9.8, 7.2, 17.2]
-      : [6.4, 5.4, 11.8];
+      ? [8.5, 6.35, 14.9]
+      : [4.9, 4.35, 9.25];
     node.position.set(position[0], position[1], position[2]);
     node.lookAt(0, 0.65, 0);
     node.updateProjectionMatrix();
@@ -266,12 +512,12 @@ function CodeMonitor({
   });
 
   return (
-    <group position={[0, 0.2, -0.42]}>
+    <group position={[0.08, 0.2, -0.42]} rotation={[0, 0.2, 0]}>
       <RoundedBox
         args={[3.55, 2.35, 0.24]}
         radius={0.14}
         smoothness={3}
-        position={[0, 1.5, 0]}
+        position={[0, 1.77, 0]}
       >
         <meshStandardMaterial
           color={palette.surface}
@@ -279,12 +525,12 @@ function CodeMonitor({
           roughness={0.28}
         />
       </RoundedBox>
-      <mesh position={[0, 1.5, 0.13]}>
+      <mesh position={[0, 1.77, 0.13]}>
         <planeGeometry args={[3.18, 1.92]} />
         <meshBasicMaterial map={editor} toneMapped={false} />
       </mesh>
-      <mesh position={[0, 0.47, 0]}>
-        <boxGeometry args={[0.24, 0.72, 0.2]} />
+      <mesh position={[0, 0.58, 0]}>
+        <boxGeometry args={[0.24, 0.94, 0.2]} />
         <meshStandardMaterial color={palette.surfaceLift} metalness={0.55} />
       </mesh>
       <mesh position={[0, 0.12, 0.08]}>
@@ -300,46 +546,131 @@ function CodeMonitor({
         intensity={theme === "dark" ? 4.2 : 2.2}
         distance={4.5}
         decay={2}
-        position={[0, 1.5, 0.75]}
+        position={[0, 1.77, 0.75]}
       />
     </group>
   );
 }
 
-function Keyboard({ palette }: { palette: Palette }) {
-  const keys = useRef<THREE.InstancedMesh>(null);
+function Keyboard({
+  palette,
+  reducedMotion,
+}: {
+  palette: Palette;
+  reducedMotion: boolean;
+}) {
+  const keys = useRef<Array<THREE.Mesh | null>>([]);
+  const [legends] = useState(createKeyboardLegendTexture);
+  const keyGeometry = useMemo(() => new THREE.BoxGeometry(1, 1, 1), []);
+  const keyMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        roughness: 0.34,
+        metalness: 0.12,
+        emissiveIntensity: 0.22,
+      }),
+    [],
+  );
+  const accentKeyMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        roughness: 0.3,
+        metalness: 0.14,
+        emissiveIntensity: 0.28,
+      }),
+    [],
+  );
 
-  useLayoutEffect(() => {
-    const mesh = keys.current;
-    if (!mesh) return;
-    const dummy = new THREE.Object3D();
-    KEY_POSITIONS.forEach((position, index) => {
-      dummy.position.set(...position);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(index, dummy.matrix);
+  useEffect(() => {
+    paintKeyboardLegends(legends, palette.surface);
+  }, [legends, palette.surface]);
+
+  useEffect(() => {
+    keyMaterial.color.set(palette.paper);
+    keyMaterial.emissive.set(palette.paper);
+    accentKeyMaterial.color.set(palette.signal);
+    accentKeyMaterial.emissive.set(palette.signal);
+  }, [accentKeyMaterial, keyMaterial, palette.paper, palette.signal]);
+
+  useEffect(
+    () => () => {
+      legends.dispose();
+      keyGeometry.dispose();
+      keyMaterial.dispose();
+      accentKeyMaterial.dispose();
+    },
+    [accentKeyMaterial, keyGeometry, keyMaterial, legends],
+  );
+
+  useFrame(({ clock }) => {
+    keys.current.forEach((keyMesh, index) => {
+      if (!keyMesh) return;
+      const key = KEY_LAYOUT[index];
+      const press =
+        !reducedMotion && key.typingPhase !== null
+          ? Math.max(0, Math.sin(clock.elapsedTime * 6.4 + key.typingPhase)) **
+              5 *
+            0.034
+          : 0;
+      keyMesh.position.y = key.position[1] - press;
     });
-    mesh.instanceMatrix.needsUpdate = true;
-  }, []);
+  });
 
   return (
-    <group position={[0, 0.31, 0.86]} rotation={[-0.035, 0, 0]}>
-      <RoundedBox args={[2.75, 0.16, 1.12]} radius={0.1} smoothness={2}>
-        <meshStandardMaterial color={palette.surface} roughness={0.4} />
-      </RoundedBox>
-      <instancedMesh
-        ref={keys}
-        args={[undefined, undefined, KEY_POSITIONS.length]}
-      >
-        <boxGeometry args={[0.16, 0.07, 0.14]} />
+    <group position={[0.36, 0.3, 0.86]} rotation={[-0.045, 0.2, 0]}>
+      <RoundedBox args={[2.75, 0.16, 1.18]} radius={0.1} smoothness={3}>
         <meshStandardMaterial
-          color={palette.surfaceLift}
-          roughness={0.45}
+          color={palette.surface}
+          roughness={0.34}
+          metalness={0.38}
+        />
+      </RoundedBox>
+      <RoundedBox
+        args={[2.61, 0.025, 1.02]}
+        radius={0.06}
+        smoothness={2}
+        position={[0, 0.087, 0]}
+      >
+        <meshStandardMaterial
+          color={palette.ink}
+          roughness={0.52}
           metalness={0.15}
         />
-      </instancedMesh>
-      <mesh position={[0, 0.1, 0.32]}>
-        <boxGeometry args={[1.05, 0.045, 0.14]} />
-        <meshStandardMaterial color={palette.signal} />
+      </RoundedBox>
+      {KEY_LAYOUT.map((key, index) => (
+        <mesh
+          key={`${key.position[0]}-${key.position[2]}`}
+          ref={(node) => {
+            keys.current[index] = node;
+          }}
+          geometry={keyGeometry}
+          material={key.accent ? accentKeyMaterial : keyMaterial}
+          position={key.position}
+          scale={key.scale}
+        />
+      ))}
+      <mesh position={[0, 0.198, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[2.5, 1.02]} />
+        <meshBasicMaterial
+          map={legends}
+          transparent
+          toneMapped={false}
+          depthWrite={false}
+          polygonOffset
+          polygonOffsetFactor={-2}
+        />
+      </mesh>
+      {[0, 1, 2].map((light) => (
+        <mesh key={light} position={[1.05 + light * 0.12, 0.2, -0.49]}>
+          <sphereGeometry args={[0.018, 10, 8]} />
+          <meshBasicMaterial
+            color={light === 0 ? palette.signal : palette.violet}
+          />
+        </mesh>
+      ))}
+      <mesh position={[1.38, 0, 0.24]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.035, 0.035, 0.02, 16]} />
+        <meshStandardMaterial color={palette.ink} metalness={0.7} />
       </mesh>
     </group>
   );
@@ -374,6 +705,248 @@ function CylinderBetween({
   );
 }
 
+function TypingHand({
+  side,
+  skin,
+  reducedMotion,
+  phaseOffset,
+}: {
+  side: "left" | "right";
+  skin: string;
+  reducedMotion: boolean;
+  phaseOffset: number;
+}) {
+  const innerDirection = side === "left" ? 1 : -1;
+  const fingerGroups = useRef<Array<THREE.Group | null>>([]);
+  const fingers = [
+    { x: -0.145, lengths: [0.15, 0.13, 0.105], radius: 0.036 },
+    { x: -0.05, lengths: [0.18, 0.15, 0.12], radius: 0.041 },
+    { x: 0.05, lengths: [0.19, 0.155, 0.12], radius: 0.041 },
+    { x: 0.145, lengths: [0.165, 0.135, 0.105], radius: 0.035 },
+  ] as const;
+
+  useFrame(({ clock }) => {
+    fingerGroups.current.forEach((finger, index) => {
+      if (!finger) return;
+      if (reducedMotion) {
+        finger.rotation.x = -0.035;
+        return;
+      }
+
+      const press =
+        Math.max(
+          0,
+          Math.sin(clock.elapsedTime * 6.4 + phaseOffset + index * 1.37),
+        ) ** 4;
+      finger.rotation.x = 0.075 - press * 0.17;
+    });
+  });
+
+  return (
+    <group rotation={[0.03, side === "left" ? -0.06 : 0.06, 0]}>
+      <CylinderBetween
+        start={[0, 0.01, 0.19]}
+        end={[0, 0.005, 0.02]}
+        radius={0.085}
+        color={skin}
+      />
+      <mesh position={[0, 0.005, -0.13]} scale={[0.22, 0.085, 0.265]}>
+        <sphereGeometry args={[1, 24, 18]} />
+        <meshStandardMaterial color={skin} roughness={0.62} />
+      </mesh>
+
+      {fingers.map(({ x, lengths, radius }, index) => {
+        const [proximal, middle, distal] = lengths;
+        const middleJoint: [number, number, number] = [0, -0.026, -proximal];
+        const distalJoint: [number, number, number] = [
+          0,
+          -0.066,
+          -(proximal + middle),
+        ];
+        const tip: [number, number, number] = [
+          0,
+          -0.105,
+          -(proximal + middle + distal),
+        ];
+
+        return (
+          <group
+            key={x}
+            ref={(node) => {
+              fingerGroups.current[index] = node;
+            }}
+            position={[x, -0.002, -0.3]}
+          >
+            <CylinderBetween
+              start={[0, 0, 0]}
+              end={middleJoint}
+              radius={radius}
+              color={skin}
+            />
+            <CylinderBetween
+              start={middleJoint}
+              end={distalJoint}
+              radius={radius * 0.91}
+              color={skin}
+            />
+            <CylinderBetween
+              start={distalJoint}
+              end={tip}
+              radius={radius * 0.78}
+              color={skin}
+            />
+            {[middleJoint, distalJoint].map((joint, jointIndex) => (
+              <mesh
+                key={jointIndex}
+                position={joint}
+                scale={radius * (jointIndex === 0 ? 1.02 : 0.91)}
+              >
+                <sphereGeometry args={[1, 14, 10]} />
+                <meshStandardMaterial color={skin} roughness={0.64} />
+              </mesh>
+            ))}
+            <mesh
+              position={tip}
+              scale={[radius * 0.82, radius * 0.68, radius * 1.05]}
+            >
+              <sphereGeometry args={[1, 16, 12]} />
+              <meshStandardMaterial color={skin} roughness={0.58} />
+            </mesh>
+            <RoundedBox
+              args={[radius * 1.18, 0.008, radius * 1.5]}
+              radius={0.006}
+              smoothness={2}
+              position={[0, -0.079, tip[2] - 0.004]}
+              rotation={[-0.2, 0, 0]}
+            >
+              <meshStandardMaterial color="#e9b09b" roughness={0.48} />
+            </RoundedBox>
+          </group>
+        );
+      })}
+      <CylinderBetween
+        start={[innerDirection * 0.16, 0.005, -0.08]}
+        end={[innerDirection * 0.26, -0.025, -0.22]}
+        radius={0.052}
+        color={skin}
+      />
+      <CylinderBetween
+        start={[innerDirection * 0.26, -0.025, -0.22]}
+        end={[innerDirection * 0.3, -0.075, -0.35]}
+        radius={0.043}
+        color={skin}
+      />
+      <mesh
+        position={[innerDirection * 0.3, -0.075, -0.35]}
+        scale={[0.04, 0.032, 0.052]}
+      >
+        <sphereGeometry args={[1, 14, 10]} />
+        <meshStandardMaterial color={skin} roughness={0.6} />
+      </mesh>
+    </group>
+  );
+}
+
+function HumanFace({ skin, hair }: { skin: string; hair: string }) {
+  return (
+    <group>
+      {[-0.52, 0.52].map((x) => (
+        <mesh key={x} position={[x, 2.7, -1.25]} scale={[0.08, 0.13, 0.065]}>
+          <sphereGeometry args={[1, 18, 14]} />
+          <meshStandardMaterial color={skin} roughness={0.62} />
+        </mesh>
+      ))}
+
+      {[-0.19, 0.19].map((x) => (
+        <group key={x}>
+          <mesh position={[x, 2.8, -1.745]} scale={[0.105, 0.062, 0.025]}>
+            <sphereGeometry args={[1, 18, 12]} />
+            <meshStandardMaterial color="#f5f1e8" roughness={0.42} />
+          </mesh>
+          <mesh position={[x, 2.8, -1.774]} scale={[0.041, 0.041, 0.018]}>
+            <sphereGeometry args={[1, 16, 12]} />
+            <meshStandardMaterial color="#4a2d1f" roughness={0.34} />
+          </mesh>
+          <mesh position={[x - 0.012, 2.817, -1.794]} scale={0.011}>
+            <sphereGeometry args={[1, 10, 8]} />
+            <meshBasicMaterial color="#ffffff" />
+          </mesh>
+          <mesh position={[x, 2.8, -1.79]} scale={[0.18, 0.115, 1]}>
+            <torusGeometry args={[0.55, 0.045, 8, 28]} />
+            <meshStandardMaterial
+              color="#574337"
+              metalness={0.52}
+              roughness={0.28}
+            />
+          </mesh>
+        </group>
+      ))}
+      <CylinderBetween
+        start={[-0.08, 2.81, -1.79]}
+        end={[0.08, 2.81, -1.79]}
+        radius={0.012}
+        color="#574337"
+      />
+
+      <CylinderBetween
+        start={[0, 2.77, -1.73]}
+        end={[0, 2.62, -1.82]}
+        radius={0.043}
+        color={skin}
+      />
+      <mesh position={[0, 2.59, -1.82]} scale={[0.07, 0.045, 0.06]}>
+        <sphereGeometry args={[1, 16, 12]} />
+        <meshStandardMaterial color="#b96f54" roughness={0.62} />
+      </mesh>
+
+      {[-0.19, 0.19].map((x) => (
+        <CylinderBetween
+          key={`brow-${x}`}
+          start={[x - 0.09, 2.91, -1.75]}
+          end={[x + 0.08, 2.93, -1.76]}
+          radius={0.018}
+          color={hair}
+        />
+      ))}
+
+      {[-0.31, 0.31].map((x) => (
+        <mesh
+          key={`cheek-${x}`}
+          position={[x, 2.59, -1.69]}
+          scale={[0.14, 0.1, 0.045]}
+        >
+          <sphereGeometry args={[1, 16, 12]} />
+          <meshStandardMaterial
+            color="#db8c72"
+            transparent
+            opacity={0.42}
+            roughness={0.7}
+          />
+        </mesh>
+      ))}
+
+      <mesh position={[0, 2.5, -1.775]} rotation={[0, 0, Math.PI]}>
+        <torusGeometry args={[0.115, 0.014, 8, 28, Math.PI]} />
+        <meshStandardMaterial color="#743f37" roughness={0.58} />
+      </mesh>
+      <mesh position={[0, 2.41, -1.68]} scale={[0.24, 0.14, 0.055]}>
+        <sphereGeometry args={[1, 20, 14]} />
+        <meshStandardMaterial color={hair} roughness={0.9} />
+      </mesh>
+      {[-0.34, 0.34].map((x) => (
+        <mesh
+          key={`beard-${x}`}
+          position={[x * 0.84, 2.49, -1.68]}
+          scale={[0.09, 0.16, 0.055]}
+        >
+          <sphereGeometry args={[1, 18, 12]} />
+          <meshStandardMaterial color={hair} roughness={0.92} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 function DeveloperPersona({
   palette,
   reducedMotion,
@@ -381,32 +954,17 @@ function DeveloperPersona({
   palette: Palette;
   reducedMotion: boolean;
 }) {
-  const leftHand = useRef<THREE.Group>(null);
-  const rightHand = useRef<THREE.Group>(null);
-
-  useFrame(({ clock }) => {
-    if (reducedMotion) return;
-    const left = leftHand.current;
-    const right = rightHand.current;
-    if (!left || !right) return;
-    left.position.y = 0.48 + Math.sin(clock.elapsedTime * 7.8) * 0.018;
-    right.position.y =
-      0.48 + Math.sin(clock.elapsedTime * 7.8 + Math.PI) * 0.018;
-    left.rotation.x = Math.sin(clock.elapsedTime * 7.8) * 0.035;
-    right.rotation.x = Math.sin(clock.elapsedTime * 7.8 + Math.PI) * 0.035;
-  });
-
   const skin = "#c78664";
-  const hair = "#171713";
+  const hair = "#28211c";
   const shirt = themeAwareShirt(palette);
 
   return (
     <group
-      position={[0.78, 0, 0]}
-      rotation={[0, Math.PI, 0]}
+      position={[0.78, 0, 2.4]}
+      rotation={[0, 0.28, 0]}
       scale={[0.9, 1, 0.9]}
     >
-      <group position={[0, 0, -1.82]}>
+      <group position={[0, 0, -0.78]}>
         <RoundedBox
           args={[1.72, 2.1, 0.34]}
           radius={0.34}
@@ -437,69 +995,90 @@ function DeveloperPersona({
       >
         <meshStandardMaterial color={shirt} roughness={0.78} />
       </RoundedBox>
+      {[-0.63, 0.63].map((x) => (
+        <mesh
+          key={`shoulder-${x}`}
+          position={[x, 1.5, -1.4]}
+          scale={[0.3, 0.36, 0.38]}
+        >
+          <sphereGeometry args={[1, 18, 14]} />
+          <meshStandardMaterial color={shirt} roughness={0.78} />
+        </mesh>
+      ))}
       <mesh position={[0, 2.08, -1.32]}>
         <cylinderGeometry args={[0.22, 0.25, 0.38, 16]} />
         <meshStandardMaterial color={skin} roughness={0.72} />
       </mesh>
-
-      <mesh position={[0, 2.72, -1.24]} scale={[0.55, 0.66, 0.52]}>
-        <sphereGeometry args={[1, 28, 20]} />
-        <meshStandardMaterial color={skin} roughness={0.64} />
-      </mesh>
-      <mesh position={[0, 3.08, -1.34]} scale={[0.57, 0.3, 0.53]}>
-        <sphereGeometry args={[1, 24, 16]} />
-        <meshStandardMaterial color={hair} roughness={0.92} />
-      </mesh>
-      <mesh position={[0, 2.52, -0.79]} scale={[0.42, 0.28, 0.09]}>
-        <sphereGeometry args={[1, 20, 12]} />
-        <meshStandardMaterial color={hair} roughness={0.9} />
-      </mesh>
       {[-0.18, 0.18].map((x) => (
-        <mesh key={x} position={[x, 2.79, -0.74]} scale={[0.045, 0.032, 0.025]}>
-          <sphereGeometry args={[1, 12, 10]} />
-          <meshBasicMaterial color="#171713" />
+        <mesh
+          key={`collar-${x}`}
+          position={[x, 2.04, -1.7]}
+          rotation={[0.1, 0, x < 0 ? -0.34 : 0.34]}
+        >
+          <coneGeometry args={[0.22, 0.46, 3]} />
+          <meshStandardMaterial color={palette.surfaceLift} roughness={0.7} />
         </mesh>
       ))}
-      <mesh position={[0, 2.67, -0.7]} scale={[0.06, 0.1, 0.08]}>
-        <sphereGeometry args={[1, 12, 10]} />
-        <meshStandardMaterial color="#b8785d" roughness={0.74} />
+
+      <mesh position={[0, 2.72, -1.24]} scale={[0.55, 0.66, 0.52]}>
+        <sphereGeometry args={[1, 36, 28]} />
+        <meshStandardMaterial color={skin} roughness={0.57} />
       </mesh>
+      <mesh position={[0, 3.15, -1.31]} scale={[0.52, 0.22, 0.51]}>
+        <sphereGeometry args={[1, 32, 20]} />
+        <meshStandardMaterial color={hair} roughness={0.92} />
+      </mesh>
+      {[-0.38, -0.19, 0, 0.19, 0.38].map((x, index) => (
+        <mesh
+          key={`hair-${x}`}
+          position={[x, 3.1 + (index % 2) * 0.055, -1.57]}
+          scale={[0.135, 0.13, 0.13]}
+        >
+          <sphereGeometry args={[1, 18, 14]} />
+          <meshStandardMaterial color={hair} roughness={0.94} />
+        </mesh>
+      ))}
+      <HumanFace skin={skin} hair={hair} />
 
       <CylinderBetween
         start={[-0.58, 1.57, -1.34]}
-        end={[-0.48, 0.88, -1.18]}
+        end={[-0.48, 0.88, -1.36]}
         radius={0.19}
         color={shirt}
       />
       <CylinderBetween
-        start={[-0.48, 0.88, -1.18]}
-        end={[-0.36, 0.48, -1]}
+        start={[-0.48, 0.88, -1.36]}
+        end={[-0.36, 0.6, -1.5]}
         radius={0.15}
         color={skin}
       />
       <CylinderBetween
         start={[0.58, 1.57, -1.34]}
-        end={[0.48, 0.88, -1.18]}
+        end={[0.48, 0.88, -1.31]}
         radius={0.19}
         color={shirt}
       />
       <CylinderBetween
-        start={[0.48, 0.88, -1.18]}
-        end={[0.36, 0.48, -1]}
+        start={[0.48, 0.88, -1.31]}
+        end={[0.36, 0.6, -1.4]}
         radius={0.15}
         color={skin}
       />
-      <group ref={leftHand} position={[-0.36, 0.48, -1]}>
-        <mesh scale={[0.2, 0.075, 0.24]}>
-          <sphereGeometry args={[1, 16, 12]} />
-          <meshStandardMaterial color={skin} roughness={0.7} />
-        </mesh>
+      <group position={[-0.36, 0.6, -1.5]}>
+        <TypingHand
+          side="left"
+          skin={skin}
+          reducedMotion={reducedMotion}
+          phaseOffset={0.5}
+        />
       </group>
-      <group ref={rightHand} position={[0.36, 0.48, -1]}>
-        <mesh scale={[0.2, 0.075, 0.24]}>
-          <sphereGeometry args={[1, 16, 12]} />
-          <meshStandardMaterial color={skin} roughness={0.7} />
-        </mesh>
+      <group position={[0.36, 0.6, -1.4]}>
+        <TypingHand
+          side="right"
+          skin={skin}
+          reducedMotion={reducedMotion}
+          phaseOffset={Math.PI}
+        />
       </group>
 
       <CylinderBetween
@@ -586,95 +1165,76 @@ function ResumePaper({
   );
 }
 
-function PullHandHint({
-  label,
-  palette,
-  reducedMotion,
-  visible,
-}: {
-  label: string;
-  palette: Palette;
-  reducedMotion: boolean;
-  visible: boolean;
-}) {
-  const hand = useRef<THREE.Group>(null);
-  const baseY = 1.13;
-
-  useFrame(({ clock }) => {
-    const node = hand.current;
-    if (!node || reducedMotion) return;
-    node.position.y = baseY + Math.sin(clock.elapsedTime * 3.2) * 0.055;
-  });
-
-  const material = (
-    <meshStandardMaterial
-      color={palette.coral}
-      emissive={palette.coral}
-      emissiveIntensity={0.16}
-      metalness={0.08}
-      roughness={0.5}
-    />
-  );
-
+function PullHandHint({ label, visible }: { label: string; visible: boolean }) {
   if (!visible) return null;
+
+  const skin = "#d3916e";
+  const fingers = [-0.095, -0.032, 0.032, 0.095] as const;
 
   return (
     <group
-      ref={hand}
-      position={[1.02, baseY, 0.62]}
-      rotation={[0.08, -0.45, -0.04]}
-      scale={0.9}
+      position={[0, 0.1, 0.08]}
+      rotation={[0.08, -0.08, -0.04]}
+      scale={0.68}
     >
-      <RoundedBox args={[0.36, 0.38, 0.13]} radius={0.09} smoothness={3}>
-        {material}
+      <RoundedBox
+        args={[0.29, 0.31, 0.13]}
+        radius={0.065}
+        smoothness={3}
+        position={[0, 0.17, 0.055]}
+      >
+        <meshStandardMaterial color={skin} roughness={0.6} />
       </RoundedBox>
       <CylinderBetween
-        start={[0, 0.13, 0]}
-        end={[0, 0.43, 0]}
-        radius={0.105}
-        color={palette.coral}
+        start={[0, 0.3, 0.06]}
+        end={[0.02, 0.62, 0.1]}
+        radius={0.075}
+        color={skin}
+      />
+      {fingers.map((x, index) => {
+        const joint: [number, number, number] = [x, 0.035, 0.02];
+        const tip: [number, number, number] = [
+          x * 0.86,
+          -0.07 + index * 0.004,
+          -0.045,
+        ];
+
+        return (
+          <group key={x}>
+            <CylinderBetween
+              start={[x, 0.12, 0.045]}
+              end={joint}
+              radius={0.027 - index * 0.0015}
+              color={skin}
+            />
+            <CylinderBetween
+              start={joint}
+              end={tip}
+              radius={0.024 - index * 0.0015}
+              color={skin}
+            />
+            <mesh position={tip} scale={[0.025, 0.023, 0.025]}>
+              <sphereGeometry args={[1, 12, 9]} />
+              <meshStandardMaterial color={skin} roughness={0.58} />
+            </mesh>
+          </group>
+        );
+      })}
+      <CylinderBetween
+        start={[-0.13, 0.22, 0.06]}
+        end={[-0.19, 0.07, -0.005]}
+        radius={0.034}
+        color={skin}
       />
       <CylinderBetween
-        start={[-0.11, -0.12, 0]}
-        end={[-0.22, -0.58, 0]}
-        radius={0.052}
-        color={palette.coral}
+        start={[-0.19, 0.07, -0.005]}
+        end={[-0.1, -0.035, -0.055]}
+        radius={0.029}
+        color={skin}
       />
-      <CylinderBetween
-        start={[-0.02, -0.13, 0]}
-        end={[-0.02, -0.36, 0]}
-        radius={0.052}
-        color={palette.coral}
-      />
-      <CylinderBetween
-        start={[0.07, -0.12, 0]}
-        end={[0.07, -0.33, 0]}
-        radius={0.048}
-        color={palette.coral}
-      />
-      <CylinderBetween
-        start={[0.15, -0.1, 0]}
-        end={[0.15, -0.28, 0]}
-        radius={0.042}
-        color={palette.coral}
-      />
-      <CylinderBetween
-        start={[-0.16, 0.03, 0]}
-        end={[-0.34, -0.1, 0]}
-        radius={0.05}
-        color={palette.coral}
-      />
-      <mesh position={[-0.22, -0.6, 0]}>
-        <sphereGeometry args={[0.053, 14, 10]} />
-        <meshStandardMaterial
-          color={palette.coral}
-          emissive={palette.coral}
-          emissiveIntensity={0.16}
-        />
-      </mesh>
       <Html
         center
-        position={[0.43, 0.02, 0.04]}
+        position={[0.48, 0.22, 0.08]}
         zIndexRange={[4, 3]}
         style={{ pointerEvents: "none" }}
       >
@@ -720,7 +1280,12 @@ function DeskLamp({
     if (!cordPivot || !cordMesh || !pullHandle) return;
 
     const baseLength = 0.76;
-    const length = baseLength + pullDistance.current;
+    const demonstrationPhase = (clock.elapsedTime % 3.4) / 3.4;
+    const demonstrationPull =
+      !hasInteracted && !reducedMotion && demonstrationPhase < 0.34
+        ? Math.sin((demonstrationPhase / 0.34) * Math.PI) * 0.2
+        : 0;
+    const length = baseLength + pullDistance.current + demonstrationPull;
     cordPivot.rotation.z =
       dragStart.current === null && !reducedMotion
         ? Math.sin(clock.elapsedTime * 1.75) * 0.12
@@ -777,12 +1342,6 @@ function DeskLamp({
 
   return (
     <group position={[2.68, 0.32, -0.2]}>
-      <PullHandHint
-        label={pullLabel}
-        palette={palette}
-        reducedMotion={reducedMotion}
-        visible={!hasInteracted}
-      />
       <mesh position={[0, 0, 0]}>
         <cylinderGeometry args={[0.54, 0.68, 0.14, 28]} />
         <meshStandardMaterial
@@ -839,18 +1398,20 @@ function DeskLamp({
             emissiveIntensity={0.32}
           />
         </mesh>
-        <group ref={handle}>
-          <mesh
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={finishPull}
-            onPointerCancel={(event) => finishPull(event, false)}
-            onPointerOver={(event) => {
-              event.stopPropagation();
-              setHovered(true);
-            }}
-            onPointerOut={() => setHovered(false)}
-          >
+        <group
+          ref={handle}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={finishPull}
+          onPointerCancel={(event) => finishPull(event, false)}
+          onPointerOver={(event) => {
+            event.stopPropagation();
+            setHovered(true);
+          }}
+          onPointerOut={() => setHovered(false)}
+        >
+          <PullHandHint label={pullLabel} visible={!hasInteracted} />
+          <mesh>
             <sphereGeometry args={[0.13, 18, 14]} />
             <meshStandardMaterial
               color={palette.surfaceLift}
@@ -901,6 +1462,7 @@ function Workstation({
   reducedMotion,
   theme,
   onOpenResume,
+  onReady,
   onToggleTheme,
 }: DeskSceneProps) {
   const palette = useMemo(() => getPalette(theme), [theme]);
@@ -950,6 +1512,7 @@ function Workstation({
         )),
       )}
 
+      <EngineerGalleryWall palette={palette} theme={theme} />
       <DeveloperPersona palette={palette} reducedMotion={reducedMotion} />
       <CodeMonitor
         active={active}
@@ -957,7 +1520,7 @@ function Workstation({
         theme={theme}
         palette={palette}
       />
-      <Keyboard palette={palette} />
+      <Keyboard palette={palette} reducedMotion={reducedMotion} />
       <ResumePaper palette={palette} onOpen={onOpenResume} />
       <DeskLamp
         pullLabel={pullLabel}
@@ -975,6 +1538,7 @@ function Workstation({
         <torusGeometry args={[0.22, 0.055, 12, 24, Math.PI]} />
         <meshStandardMaterial color={palette.coral} roughness={0.68} />
       </mesh>
+      <FirstUsableFrame onReady={onReady} />
     </group>
   );
 }
@@ -985,8 +1549,12 @@ function FirstUsableFrame({ onReady }: { onReady: () => void }) {
   const readyFrame = useRef(0);
 
   useLayoutEffect(() => {
+    reported.current = false;
     invalidate();
-    return () => window.cancelAnimationFrame(readyFrame.current);
+    return () => {
+      window.cancelAnimationFrame(readyFrame.current);
+      reported.current = false;
+    };
   }, [invalidate]);
 
   useFrame(() => {
@@ -995,7 +1563,10 @@ function FirstUsableFrame({ onReady }: { onReady: () => void }) {
 
     // Fiber renders the canvas after frame subscribers run. Reporting on the
     // following browser frame guarantees that the first composed frame exists.
-    readyFrame.current = window.requestAnimationFrame(onReady);
+    readyFrame.current = window.requestAnimationFrame(() => {
+      readyFrame.current = 0;
+      onReady();
+    });
   }, -1000);
 
   return null;
@@ -1021,7 +1592,6 @@ export function DeskScene(props: DeskSceneProps) {
       performance={{ min: 0.55 }}
       shadows={false}
     >
-      <FirstUsableFrame onReady={props.onReady} />
       <ResponsiveCamera />
       <ambientLight intensity={isDark ? 1.35 : 2.6} />
       <directionalLight
@@ -1041,11 +1611,11 @@ export function DeskScene(props: DeskSceneProps) {
         global
         cursor
         snap={false}
-        speed={1.05}
+        speed={1.25}
         zoom={0.92}
         rotation={[0.03, -0.28, 0]}
         polar={[-0.16, 0.28]}
-        azimuth={[-0.82, 0.82]}
+        azimuth={[-Infinity, Infinity]}
         damping={0.16}
       >
         <Workstation {...props} />
