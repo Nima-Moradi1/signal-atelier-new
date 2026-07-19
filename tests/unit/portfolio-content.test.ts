@@ -53,7 +53,7 @@ describe("updated professional portfolio content", () => {
       ]),
     );
     expect(portfolio.education.institution).toBe(
-      "Tehran Azad University · 2021 — Present",
+      "Tehran Azad University · 2021 — 2026",
     );
   });
 });

@@ -623,7 +623,7 @@ test("compacts capabilities and presents in-progress education", async ({
       .evaluate((element) => getComputedStyle(element).animationName),
   ).toContain("education-signal-pulse");
   await expect(
-    page.getByText("Tehran Azad University · 2021 — Present"),
+    page.getByText("Tehran Azad University · 2021 — 2026"),
   ).toBeAttached();
 });
 
@@ -665,7 +665,7 @@ test("moves capabilities across a finite horizontal timeline", async ({
   });
   await expect(timeline).toHaveAttribute("data-active-index", "4");
   await expect(
-    page.getByText("Tehran Azad University · 2021 — Present"),
+    page.getByText("Tehran Azad University · 2021 — 2026"),
   ).toBeVisible();
 
   const documentOverflow = await page.evaluate(
@@ -696,7 +696,7 @@ test("keeps the horizontal timeline usable in short viewports", async ({
   });
   await expect(timeline).toHaveAttribute("data-active-index", "4");
   await expect(
-    page.getByText("Tehran Azad University · 2021 — Present"),
+    page.getByText("Tehran Azad University · 2021 — 2026"),
   ).toBeAttached();
 });
 

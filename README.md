@@ -44,7 +44,7 @@ After running the site locally, open `http://localhost:3000`. Verified desktop a
 | Motion     | Motion                                      | Reduced-motion-aware reveal and interaction primitives   |
 | Forms      | React Hook Form + Zod                       | Shared client/server validation contract                 |
 | Tests      | Vitest + Testing Library + Playwright + axe | Unit, interaction, browser, and accessibility coverage   |
-| Deployment | Vercel-compatible Next.js build             | No machine-specific filesystem assumptions               |
+| Deployment | Liara Next.js platform                      | Managed production releases from GitHub Actions          |
 
 ## Architecture
 
@@ -174,26 +174,25 @@ The full rationale and budgets are in `PERFORMANCE.md`. In short: semantic HTML 
 
 See `DESIGN_SYSTEM.md` for the full interaction and accessibility rules.
 
-## Vercel deployment
+## Liara deployment
 
-### Dashboard
+Production is deployed to the Liara app `nimamoradirad` from the `main` branch by
+`.github/workflows/deploy-liara.yml`. The workflow validates the project, builds it,
+and deploys it with Liara CLI 9. Concurrent pushes cancel an older in-progress
+deployment so the newest `main` commit is the release that goes live.
 
-1. Push the repository to GitHub, GitLab, or Bitbucket.
-2. Import it into Vercel.
-3. Keep the detected framework preset as Next.js.
-4. Add the environment variables above.
-5. Deploy, then set `NEXT_PUBLIC_SITE_URL` to the production domain and redeploy.
+One repository secret is required in GitHub under **Settings > Secrets and
+variables > Actions**:
 
-### CLI
+- `LIARA_API_TOKEN`: an API token created in the Liara console
 
-```bash
-npm install -g vercel
-vercel
-vercel env add NEXT_PUBLIC_SITE_URL
-vercel --prod
-```
+The Liara app must use the Next.js platform, Node.js 22, and port 3000, matching
+`liara.json`. Keep production environment variables in the Liara app rather than
+GitHub. At minimum, set `NEXT_PUBLIC_SITE_URL=https://nimamoradirad.com`; add the
+contact-related values listed above when direct contact delivery is enabled.
 
-If contact delivery is required, also add the three server-only Resend values before the production deployment.
+After the one-time secret is present, every push to `main` triggers the deployment.
+The same workflow can also be rerun manually from the GitHub **Actions** tab.
 
 ## Security and privacy
 
