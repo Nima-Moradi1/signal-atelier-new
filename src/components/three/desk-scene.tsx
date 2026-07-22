@@ -317,7 +317,7 @@ function paintArtworkPlaque(texture: THREE.CanvasTexture, theme: Theme) {
   texture.needsUpdate = true;
 }
 
-function EngineerGalleryWall({
+function EngineerWallArtwork({
   palette,
   theme,
 }: {
@@ -345,41 +345,21 @@ function EngineerGalleryWall({
   useEffect(() => () => plaque.dispose(), [plaque]);
 
   return (
-    <group position={[-4.05, 0.34, -0.72]} rotation={[0, Math.PI / 2, 0]}>
-      <RoundedBox args={[4.5, 4.36, 0.16]} radius={0.08} smoothness={3}>
-        <meshStandardMaterial
-          color={palette.paper}
-          metalness={0.04}
-          roughness={0.94}
-        />
-      </RoundedBox>
-
-      {[-1.5, 0, 1.5].map((x) => (
-        <mesh key={x} position={[x, 0, 0.086]}>
-          <boxGeometry args={[0.018, 4.1, 0.01]} />
-          <meshStandardMaterial
-            color={palette.ink}
-            transparent
-            opacity={0.08}
-            roughness={1}
-          />
-        </mesh>
-      ))}
-
-      <group position={[0, 0.48, 0.13]}>
+    <group position={[0.08, 3.95, -1.74]}>
+      <group position={[0, 0.34, 0.13]}>
         <CylinderBetween
-          start={[-1.42, 1.12, 0]}
-          end={[0, 1.62, 0]}
+          start={[-1.1, 0.82, 0]}
+          end={[0, 1.22, 0]}
           radius={0.018}
           color={palette.surface}
         />
         <CylinderBetween
-          start={[1.42, 1.12, 0]}
-          end={[0, 1.62, 0]}
+          start={[1.1, 0.82, 0]}
+          end={[0, 1.22, 0]}
           radius={0.018}
           color={palette.surface}
         />
-        <mesh position={[0, 1.65, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <mesh position={[0, 1.25, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.065, 0.065, 0.055, 18]} />
           <meshStandardMaterial
             color={palette.signal}
@@ -389,7 +369,7 @@ function EngineerGalleryWall({
         </mesh>
 
         <RoundedBox
-          args={[3.52, 2.36, 0.16]}
+          args={[2.78, 1.84, 0.16]}
           radius={0.045}
           smoothness={3}
           position={[0, 0, 0.035]}
@@ -401,15 +381,15 @@ function EngineerGalleryWall({
           />
         </RoundedBox>
         <mesh position={[0, 0, 0.126]}>
-          <planeGeometry args={[3.2, 2.04]} />
+          <planeGeometry args={[2.48, 1.54]} />
           <meshBasicMaterial map={painting} toneMapped={false} />
         </mesh>
 
         <RoundedBox
-          args={[2.84, 0.46, 0.08]}
+          args={[2.32, 0.38, 0.08]}
           radius={0.045}
           smoothness={3}
-          position={[0, -1.45, 0.04]}
+          position={[0, -1.14, 0.04]}
         >
           <meshStandardMaterial
             color={palette.surface}
@@ -417,22 +397,12 @@ function EngineerGalleryWall({
             roughness={0.34}
           />
         </RoundedBox>
-        <mesh position={[0, -1.45, 0.086]}>
-          <planeGeometry args={[2.68, 0.32]} />
+        <mesh position={[0, -1.14, 0.086]}>
+          <planeGeometry args={[2.18, 0.25]} />
           <meshBasicMaterial map={plaque} toneMapped={false} />
         </mesh>
       </group>
 
-      {[-2.06, 2.06].map((x) => (
-        <mesh key={x} position={[x, -1.86, 0.04]}>
-          <boxGeometry args={[0.14, 0.48, 0.34]} />
-          <meshStandardMaterial
-            color={palette.surface}
-            metalness={0.3}
-            roughness={0.48}
-          />
-        </mesh>
-      ))}
     </group>
   );
 }
@@ -1512,7 +1482,7 @@ function Workstation({
         )),
       )}
 
-      <EngineerGalleryWall palette={palette} theme={theme} />
+      <EngineerWallArtwork palette={palette} theme={theme} />
       <DeveloperPersona palette={palette} reducedMotion={reducedMotion} />
       <CodeMonitor
         active={active}
